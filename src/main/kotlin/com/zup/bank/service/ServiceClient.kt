@@ -5,16 +5,10 @@ import com.zup.bank.repository.ClientRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
-@Service
-class ServiceClient(private val clientRepository : ClientRepository) {
 
-    fun createClient(client : Client) : Client{
-        clientRepository.save(client)
-        return client
-    }
+interface ServiceClient {
 
-    fun getById(id:Long) : Optional<Client> {
-        return clientRepository.findById(id)
-    }
-
+    fun createClient(client : Client) : Client
+    fun getById(id:Long) : Optional<Client>
+    fun getAllClient() : List<Client>
 }
