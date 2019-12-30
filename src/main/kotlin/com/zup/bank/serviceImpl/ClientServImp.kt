@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ClientServImp : ServiceClient  {
+class ClientServImp : ServiceClient {
 
     @Autowired
     private lateinit var  clientRepository: ClientRepository
@@ -20,16 +20,26 @@ class ClientServImp : ServiceClient  {
     }
 
     override fun getById(id:Long) : Optional<Client> {
+        if (!clientRepository.existsById(id)){
+            throw Exception("Cliente não cadastrado");
+        }
         return clientRepository.findById(id)
     }
 
-    override fun getAllClient(): List<Client> {
+    override fun getAllClient(): MutableList<Client> {
        return clientRepository.findAll()
     }
 
-    fun validateClient(client: Client) {
-        if(clientRepository.existsByCpf(client.cpf!!)){
+    override fun getByCpf(cpf: String): Client {
+        if(!clientRepository.existsByCpf(cpf)){
+            throw Exception("Cliente não cadastrado")
+        }
+        return clientRepository.findByCpf(cpf)
+    }
 
+    fun validateClient(client: Client)  {
+        if(clientRepository.existsByCpf(client.cpf!!)){
+            throw Exception("Cliente já existe")
         }
     }
 }

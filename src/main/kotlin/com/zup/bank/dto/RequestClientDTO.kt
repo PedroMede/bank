@@ -1,5 +1,6 @@
 package com.zup.bank.dto
 
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
 data class RequestClientDTO(
@@ -7,6 +8,7 @@ data class RequestClientDTO(
         val name: String,
 
         @NotBlank(message = "email Obrigatório")
+        @Email(message ="Email não é válido")
         val email: String,
 
         @NotBlank(message = "cpf obrigatório")

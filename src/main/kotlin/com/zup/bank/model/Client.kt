@@ -1,6 +1,7 @@
 package com.zup.bank.model
 
 import javax.persistence.*
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
 @Entity
@@ -12,15 +13,16 @@ class Client(
         @Column(name = "id")
         var id : Long? = null,
 
-        @NotBlank
+        @NotBlank(message = "nome obrigatório")
         @Column(name = "name")
         var name: String? = null,
 
-        @NotBlank
+        @NotBlank(message="email obrigatório")
         @Column(name = "email")
+        @Email(message = "email inválido")
         var email:String? = null,
 
-        @NotBlank
+        @NotBlank(message="cpf obrigatório")
         @Column(name = "cpf")
         var cpf: String? = null
 ){
