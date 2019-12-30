@@ -10,5 +10,5 @@ interface ServiceClient {
     fun getById(id:Long) : Optional<Client>
     fun getAllClient() : MutableList<Client>
     fun getByCpf(cpf:String): Client
-
+    fun getByEmail(email:String): Client
 }

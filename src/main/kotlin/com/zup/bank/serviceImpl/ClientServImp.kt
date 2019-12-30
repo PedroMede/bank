@@ -26,6 +26,7 @@ class ClientServImp : ServiceClient {
         return clientRepository.findById(id)
     }
 
+
     override fun getAllClient(): MutableList<Client> {
        return clientRepository.findAll()
     }
@@ -35,6 +36,13 @@ class ClientServImp : ServiceClient {
             throw Exception("Cliente não cadastrado")
         }
         return clientRepository.findByCpf(cpf)
+    }
+
+    override fun getByEmail(email: String): Client {
+         if (!clientRepository.existsByEmail(email)){
+            throw Exception("Email já existente")
+        }
+        return clientRepository.findByEmail(email)
     }
 
     fun validateClient(client: Client)  {

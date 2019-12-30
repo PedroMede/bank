@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface ClientRepository : JpaRepository<Client,Long> {
     fun findByCpf(cpf: String) : Client
     fun existsByCpf(cpf: String) : Boolean
+    fun existsByEmail(email:String): Boolean
+    fun findByEmail(email: String) : Client
 }
