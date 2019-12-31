@@ -50,4 +50,6 @@ class ClientServImp : ServiceClient {
             throw Exception("Cliente já existe")
         }
     }
+
+
 }

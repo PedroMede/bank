@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 data class RequestClientDTO(
+
         @field:NotBlank (message = "nome obrigatório")
         @field:NotNull(message = "nome obrigatório")
         @field:NotEmpty(message = "nome obrigatório")

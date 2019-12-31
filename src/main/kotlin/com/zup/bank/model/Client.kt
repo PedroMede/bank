@@ -17,17 +17,19 @@ class Client(
 
         @field: NotBlank(message = "nome obrigatório")
         @field: NotNull(message = "nome obrigatório")
+        @field: NotEmpty(message = "nome obrigatório")
         @Column(name = "name")
         var name: String? = null,
 
-        @NotBlank(message="email obrigatório")
+        @field:NotBlank(message="email obrigatório")
+        @field:NotNull(message="email obrigatório")
+        @field:Email(message = "email inválido")
         @Column(name = "email")
-        @Email(message = "email inválido")
         var email:String? = null,
 
-        @NotBlank(message="cpf obrigatório")
-        @NotEmpty
-        @NotNull
+        @field:NotBlank(message="cpf obrigatório")
+        @field:NotEmpty(message="cpf obrigatório")
+        @field:NotNull(message="cpf obrigatório")
         @Column(name = "cpf")
         var cpf: String? = null
 )
