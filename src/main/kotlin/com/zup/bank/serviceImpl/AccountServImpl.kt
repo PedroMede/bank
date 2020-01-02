@@ -45,7 +45,7 @@ class AccountServImpl : ServiceAcc {
     }
 
     override fun getByHolder(cpf: String): Account {
-        validateAccount(cpf)
+        doNotExist(cpf)
         return accRepository.findByHolderCpf(cpf)
     }
 
@@ -54,6 +54,12 @@ class AccountServImpl : ServiceAcc {
         if (accRepository.existsByHolderCpf(cpf)){
             throw Exception("Titular já possui uma conta cadastrada")
         }
+        if (!clientRepository.existsByCpf(cpf)){
+            throw Exception("Cliente não cadastrado no sistema")
+        }
+    }
+
+    fun doNotExist(cpf: String){
         if (!clientRepository.existsByCpf(cpf)){
             throw Exception("Cliente não cadastrado no sistema")
         }
