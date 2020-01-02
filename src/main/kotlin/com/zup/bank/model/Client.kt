@@ -1,5 +1,6 @@
 package com.zup.bank.model
 
+import org.hibernate.validator.constraints.br.CPF
 import javax.persistence.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -30,6 +31,7 @@ class Client(
         @field:NotBlank(message="cpf obrigatório")
         @field:NotEmpty(message="cpf obrigatório")
         @field:NotNull(message="cpf obrigatório")
+        @field:CPF(message = "cpf inválido")
         @Column(name = "cpf")
         var cpf: String? = null
 )

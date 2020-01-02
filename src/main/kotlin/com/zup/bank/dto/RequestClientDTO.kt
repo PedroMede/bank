@@ -1,5 +1,6 @@
 package com.zup.bank.dto
 
+import org.hibernate.validator.constraints.br.CPF
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
@@ -21,6 +22,7 @@ data class RequestClientDTO(
         @field: NotBlank(message = "cpf obrigatório")
         @field:NotNull(message = "cpf obrigatório")
         @field:NotEmpty(message = "cpf obrigatório")
+        @field:CPF(message = "cpf inválido")
         val cpf: String
 
 ) {
