@@ -8,7 +8,7 @@ interface ServiceAcc {
     fun getByNumAcc(numAcc: Long): Account
     fun getAllAcc(): MutableList<Account>
     fun getByHolder(cpf: String): Account
-    
+
 //    fun deposit (value : Double, account : Account) : Operation
 //    fun withdraw (value : Double, account: Account) : Operation
 //    fun balance (value: Double , account: Account) : Operation
