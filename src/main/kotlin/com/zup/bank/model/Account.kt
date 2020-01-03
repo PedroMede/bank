@@ -21,7 +21,6 @@ class Account(
 
 
         @OneToOne
-        @field:NotNull(message="Cpf obrigatório")
         var holder: Client? = null,
 
         @Column(name= "balance")

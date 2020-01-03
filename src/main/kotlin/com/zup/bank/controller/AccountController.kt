@@ -33,5 +33,17 @@ class AccountController(val accountService: ServiceAcc) {
         return accountService.getByNumAcc(numAcc)
     }
 
+    @GetMapping("/getAll")
+    fun getAllAcc(): MutableList<Account>{
+
+        return accountService.getAllAcc()
+    }
+
+    @PutMapping("/disableAcc/{cpf}")
+    fun disabledAcc(@PathVariable cpf: String) : ResponseEntity<Account>{
+
+        return ResponseEntity(accountService.disableAcc(cpf),HttpStatus.CREATED)
+
+    }
 
 }

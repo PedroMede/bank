@@ -23,16 +23,23 @@ class AccountServImpl : ServiceAcc {
         lateinit var acc: Account
 
         validateAccount(accountDTO.cpf!!)
+        acc = reactivateAcc(accountDTO.cpf!!)
 
+        if (acc != null){
 
-        var client : Client = clientRepository.findByCpf(accountDTO.cpf!!)
-        acc = Account(null,"0001", null, client, 0.0)
-        acc = accRepository.save(acc)
+            return acc
 
-        acc.numberAcc = acc.numAcc.toString() + (0..10).random()
-        acc = accRepository.save(acc)
+        } else {
 
-        return acc
+            var client: Client = clientRepository.findByCpf(accountDTO.cpf!!)
+            acc = Account(null, "0001", null, client, 0.0)
+            acc = accRepository.save(acc)
+
+            acc.numberAcc = acc.numAcc.toString() + (0..10).random()
+            acc = accRepository.save(acc)
+
+            return acc
+        }
     }
 
     override fun getByNumAcc(numAcc: Long): Account {
@@ -49,9 +56,22 @@ class AccountServImpl : ServiceAcc {
         return accRepository.findByHolderCpf(cpf)
     }
 
+    override fun disableAcc(cpf: String) : Account {
+
+        var acc = getByHolder(cpf)
+        acc.active = false
+
+        return accRepository.save(acc)
+
+    }
+
+    fun update (cpf: String,acc: Account) {
+
+    }
 
     fun validateAccount(cpf: String){
-        if (accRepository.existsByHolderCpf(cpf)){
+        var acc : Account = accRepository.findByHolderCpf(cpf)
+        if (accRepository.existsByHolderCpf(cpf) && acc.active == true){
             throw Exception("Titular já possui uma conta cadastrada")
         }
         if (!clientRepository.existsByCpf(cpf)){
@@ -63,5 +83,13 @@ class AccountServImpl : ServiceAcc {
         if (!clientRepository.existsByCpf(cpf)){
             throw Exception("Cliente não cadastrado no sistema")
         }
+    }
+
+    fun reactivateAcc(cpf: String) : Account {
+        var acc: Account = accRepository.findByHolderCpf(cpf)
+        acc.active = true
+        accRepository.save(acc)
+
+        return acc
     }
 }
