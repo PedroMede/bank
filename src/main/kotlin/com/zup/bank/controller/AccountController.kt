@@ -35,6 +35,11 @@ class AccountController(val accountService: ServiceAcc) {
         return accountService.getByNumAcc(numAcc)
     }
 
+    @GetMapping("/balance/{numAcc}")
+    fun getByNumberAcc (@PathVariable numAcc: String):Account{
+        return accountService.balance(numAcc)
+    }
+
     @GetMapping("/getAll")
     fun getAllAcc(): MutableList<Account>{
 
@@ -57,5 +62,16 @@ class AccountController(val accountService: ServiceAcc) {
 
         return ResponseEntity(accountService.deposit(depositDTO),HttpStatus.CREATED)
     }
+
+    @PutMapping("/withdraw")
+    fun withdraw(@Valid @RequestBody acc: DepositDTO , bindResult: BindingResult): ResponseEntity<Account>{
+
+        if(bindResult.hasErrors()){
+            badRequest().body(bindResult.allErrors)
+        }
+
+        return ResponseEntity(accountService.withdraw(acc),HttpStatus.CREATED)
+    }
+
 
 }

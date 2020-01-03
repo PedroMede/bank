@@ -1,6 +1,7 @@
 package com.zup.bank.serviceImpl
 
 import com.zup.bank.dto.AccountDTO
+import com.zup.bank.dto.BalanceDTO
 import com.zup.bank.dto.DepositDTO
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
@@ -46,7 +47,7 @@ class AccountServImpl : ServiceAcc {
     override fun getByNumAcc(numAcc: Long): Account {
         return accRepository.findByNumAcc(numAcc)
     }
-    
+
     override fun getAllAcc(): MutableList<Account> {
         return accRepository.findAll()
     }
@@ -67,7 +68,7 @@ class AccountServImpl : ServiceAcc {
 
     override fun deposit(accountDTO: DepositDTO) : Account {
 
-        validateDeposit(accountDTO.numberAcc!!, accountDTO.cpf!!)
+        validateFields(accountDTO.numberAcc!!, accountDTO.cpf!!)
         var acc: Account = accRepository.findByHolderCpf(accountDTO.cpf!!)
 
         acc.balance = acc.balance!! + accountDTO.value!!
@@ -75,11 +76,26 @@ class AccountServImpl : ServiceAcc {
         return accRepository.save(acc)
     }
 
-    override fun withdraw(value: Double, account: Account) {
+    override fun withdraw(account: DepositDTO) : Account{
+        validateFields(account.numberAcc!!, account.cpf!!)
+        var acc: Account = accRepository.findByHolderCpf(account.cpf!!)
 
+        if(acc.balance!! < account.value!! || acc.balance!! == 0.0){
+            throw Exception("Saldo insuficiente, operação cancelada")
+        }
+
+        acc.balance = acc.balance!! - account.value!!
+
+        return accRepository.save(acc)
     }
 
-    override fun balance(value: Double, account: Account) {
+    override fun balance(numberAcc: String) : Account {
+
+        if (accRepository.findByNumberAcc(numberAcc) == null){
+            throw Exception("Conta inexistente")
+        }
+
+        return accRepository.findByNumberAcc(numberAcc)
 
     }
 
@@ -116,7 +132,7 @@ class AccountServImpl : ServiceAcc {
         return acc
     }
 
-    fun validateDeposit(numberAcc: String, cpf: String){
+    fun validateFields(numberAcc: String, cpf: String){
         doNotExist(cpf)
         doNotExistAcc(numberAcc)
         var acc :  Account = accRepository.findByHolderCpf(cpf)

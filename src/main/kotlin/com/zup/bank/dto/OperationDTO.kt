@@ -14,7 +14,6 @@ class OperationDTO {
     @NotBlank(message="Valor obrigatório")
     var value:Double? = 0.0
 
-
     var desc:String? =  null
 
     @NotBlank(message = "Data obrigatória")
