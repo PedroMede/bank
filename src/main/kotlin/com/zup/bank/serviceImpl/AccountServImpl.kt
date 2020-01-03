@@ -1,6 +1,7 @@
 package com.zup.bank.serviceImpl
 
 import com.zup.bank.dto.AccountDTO
+import com.zup.bank.dto.DepositDTO
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.repository.AccountRepository
@@ -45,8 +46,7 @@ class AccountServImpl : ServiceAcc {
     override fun getByNumAcc(numAcc: Long): Account {
         return accRepository.findByNumAcc(numAcc)
     }
-
-
+    
     override fun getAllAcc(): MutableList<Account> {
         return accRepository.findAll()
     }
@@ -65,9 +65,24 @@ class AccountServImpl : ServiceAcc {
 
     }
 
-    fun update (cpf: String,acc: Account) {
+    override fun deposit(accountDTO: DepositDTO) : Account {
+
+        validateDeposit(accountDTO.numberAcc!!, accountDTO.cpf!!)
+        var acc: Account = accRepository.findByHolderCpf(accountDTO.cpf!!)
+
+        acc.balance = acc.balance!! + accountDTO.value!!
+
+        return accRepository.save(acc)
+    }
+
+    override fun withdraw(value: Double, account: Account) {
 
     }
+
+    override fun balance(value: Double, account: Account) {
+
+    }
+
 
     fun validateAccount(cpf: String){
         var acc : Account = accRepository.findByHolderCpf(cpf)
@@ -85,11 +100,28 @@ class AccountServImpl : ServiceAcc {
         }
     }
 
+    fun doNotExistAcc(numberAcc : String){
+        if (!accRepository.existsByNumberAcc(numberAcc)){
+            throw Exception("Conta inválida")
+        }
+    }
+
+
     fun reactivateAcc(cpf: String) : Account {
         var acc: Account = accRepository.findByHolderCpf(cpf)
         acc.active = true
+        acc.balance = 0.0
         accRepository.save(acc)
 
         return acc
+    }
+
+    fun validateDeposit(numberAcc: String, cpf: String){
+        doNotExist(cpf)
+        doNotExistAcc(numberAcc)
+        var acc :  Account = accRepository.findByHolderCpf(cpf)
+        if (!(acc.numberAcc == numberAcc && acc.holder?.cpf == cpf)){
+            throw Exception("Conta e cliente divergentes")
+        }
     }
 }

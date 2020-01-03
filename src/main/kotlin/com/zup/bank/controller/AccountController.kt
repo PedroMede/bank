@@ -1,8 +1,10 @@
 package com.zup.bank.controller
 
 import com.zup.bank.dto.AccountDTO
+import com.zup.bank.dto.DepositDTO
 import com.zup.bank.model.Account
 import com.zup.bank.service.ServiceAcc
+import org.apache.logging.log4j.util.PerformanceSensitive
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.badRequest
@@ -44,6 +46,16 @@ class AccountController(val accountService: ServiceAcc) {
 
         return ResponseEntity(accountService.disableAcc(cpf),HttpStatus.CREATED)
 
+    }
+
+    @PutMapping("/deposit")
+    fun deposit(@Valid @RequestBody depositDTO: DepositDTO , bindResult: BindingResult): ResponseEntity<Account>{
+
+        if(bindResult.hasErrors()){
+            badRequest().body(bindResult.allErrors)
+        }
+
+        return ResponseEntity(accountService.deposit(depositDTO),HttpStatus.CREATED)
     }
 
 }

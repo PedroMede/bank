@@ -8,7 +8,7 @@ interface AccountRepository : JpaRepository<Account, Long> {
 
     fun findByNumAcc(numAcc: Long): Account
     fun findByHolderCpf(cpf: String) : Account
-    fun existsByNumAcc(numAcc: Long): Boolean
+    fun existsByNumberAcc(numAcc: String): Boolean
     fun existsByHolderCpf(cpf: String) : Boolean
 
 }
