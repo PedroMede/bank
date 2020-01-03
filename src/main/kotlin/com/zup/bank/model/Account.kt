@@ -1,8 +1,7 @@
 package com.zup.bank.model
 
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
+
 
 @Entity
 @Table(name = "account")
@@ -18,7 +17,6 @@ class Account(
 
         @Column(name="numberAcc", unique = true)
         var numberAcc: String? = null,
-
 
         @OneToOne
         var holder: Client? = null,
