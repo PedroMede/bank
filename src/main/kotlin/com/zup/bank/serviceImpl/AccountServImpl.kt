@@ -1,12 +1,14 @@
 package com.zup.bank.serviceImpl
 
 import com.zup.bank.dto.AccountDTO
-import com.zup.bank.dto.BalanceDTO
 import com.zup.bank.dto.DepositDTO
+import com.zup.bank.enum.TypeOperation
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
+import com.zup.bank.model.Operations
 import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.ClientRepository
+import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.service.ServiceAcc
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -19,6 +21,9 @@ class AccountServImpl : ServiceAcc {
 
     @Autowired
     private lateinit var clientRepository: ClientRepository
+
+    @Autowired
+    private lateinit var operationRepository: OperationsRepository
 
     override fun createAcc(accountDTO: AccountDTO): Account {
 
@@ -69,9 +74,18 @@ class AccountServImpl : ServiceAcc {
     override fun deposit(accountDTO: DepositDTO) : Account {
 
         validateFields(accountDTO.numberAcc!!, accountDTO.cpf!!)
+
         var acc: Account = accRepository.findByHolderCpf(accountDTO.cpf!!)
 
+        val op = Operations(null,null,null,null)
+
         acc.balance = acc.balance!! + accountDTO.value!!
+
+        //insert on table operations
+        op.account = acc
+        op.typeOp = "DEPOSIT"
+        op.value = accountDTO.value
+        operationRepository.save(op)
 
         return accRepository.save(acc)
     }
@@ -84,7 +98,15 @@ class AccountServImpl : ServiceAcc {
             throw Exception("Saldo insuficiente, operação cancelada")
         }
 
+        val op = Operations(null,null,null,null)
+
         acc.balance = acc.balance!! - account.value!!
+
+        op.account = acc
+        op.typeOp = "WITHDRAW"
+        op.value = account.value
+        operationRepository.save(op)
+
 
         return accRepository.save(acc)
     }

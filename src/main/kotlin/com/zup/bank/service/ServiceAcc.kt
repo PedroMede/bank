@@ -11,11 +11,8 @@ interface ServiceAcc {
     fun getAllAcc(): MutableList<Account>
     fun getByHolder(cpf: String): Account
     fun disableAcc(cpf:String): Account
-
     fun deposit (accDTO: DepositDTO): Account
-
     fun withdraw (accDTO: DepositDTO): Account
-
     fun balance (numberAcc: String): Account
 
 }

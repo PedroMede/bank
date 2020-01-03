@@ -17,9 +17,6 @@ class Operations(
      @Column(name="value")
      var value:Double? = 0.0,
 
-     @Column(name="description")
-     var desc:String? =  null,
-
      @ManyToOne
      var account: Account? = null
 )
