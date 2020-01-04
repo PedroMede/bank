@@ -1,5 +1,6 @@
 package com.zup.bank.model
 
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -16,6 +17,9 @@ class Operations(
 
      @Column(name="value")
      var value:Double? = 0.0,
+
+     @Column(name="date")
+     var date: String? = null,
 
      @ManyToOne
      var account: Account? = null

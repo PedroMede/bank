@@ -18,7 +18,7 @@ class OperationServImpl : ServiceOperations  {
 
     override fun getAllBankStByNumberAcc(numberAcc: String): MutableList<Operations> {
         validateNumberAcc(numberAcc)
-        return operationRepository.getAllByAccountNumberAcc(numberAcc)
+        return operationRepository.getAllByAccountNumberAccOrderByDateDesc(numberAcc)
     }
 
    fun validateNumberAcc(num: String){

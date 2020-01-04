@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface OperationsRepository : JpaRepository<Operations,Long> {
 
-    fun getAllByAccountNumberAcc(numberAcc:String): MutableList<Operations>
+    fun getAllByAccountNumberAccOrderByDateDesc(numberAcc:String): MutableList<Operations>
     fun existsByAccountNumberAcc(numberAcc: String):Boolean
 }

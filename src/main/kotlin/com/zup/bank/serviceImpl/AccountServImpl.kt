@@ -11,6 +11,9 @@ import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.service.ServiceAcc
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Service
 class AccountServImpl : ServiceAcc {
@@ -78,12 +81,16 @@ class AccountServImpl : ServiceAcc {
 
         val op = Operations(null,null,null,null)
 
+        val dateFormat : DateFormat = SimpleDateFormat("dd/MM/yy HH:mm")
+        val date = Date()
+
         acc.balance = acc.balance!! + accDTO.value!!
 
         //insert on table operations
         op.account = acc
         op.typeOp = "DEPOSIT"
         op.value = accDTO.value
+        op.date = dateFormat.format(date)
         operationRepository.save(op)
 
         return accRepository.save(acc)
@@ -97,13 +104,16 @@ class AccountServImpl : ServiceAcc {
             throw Exception("Saldo insuficiente, operação cancelada")
         }
 
-        val op = Operations(null,null,null,null)
+        val op = Operations(null,null,null,null,null)
 
+        val dateFormat : DateFormat = SimpleDateFormat("dd/MM/yy HH:mm")
+        val date = Date()
         acc.balance = acc.balance!! - accDTO.value!!
 
         op.account = acc
         op.typeOp = "WITHDRAW"
         op.value = accDTO.value
+        op.date = dateFormat.format(date)
         operationRepository.save(op)
 
 
