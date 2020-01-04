@@ -31,16 +31,19 @@ class AccountServImpl : ServiceAcc {
 
         lateinit var acc: Account
 
+
         validateAccount(account.cpf!!)
+
+
         acc = reactivateAcc(account.cpf!!)
 
-        if (acc != null){
+        if (acc.numAcc != null){
 
             return acc
 
         } else {
 
-            val client: Client = clientRepository.findByCpf(account.cpf!!)
+            var client: Client = clientRepository.findByCpf(account.cpf!!)
             acc = Account(null, "0001", null, client, 0.0)
             acc = accRepository.save(acc)
 
@@ -132,11 +135,15 @@ class AccountServImpl : ServiceAcc {
 
 
     fun validateAccount(cpf: String){
-        val acc : Account = accRepository.findByHolderCpf(cpf)
-        if (accRepository.existsByHolderCpf(cpf) && acc.active == true){
-            throw Exception("Titular já possui uma conta cadastrada")
+
+        if(accRepository.existsByHolderCpf(cpf)) {
+            var acc: Account = accRepository.findByHolderCpf(cpf)
+            if ( acc.active == true) {
+                throw Exception("Titular já possui uma conta cadastrada")
+            }
         }
-        if (!clientRepository.existsByCpf(cpf)){
+
+        if (!clientRepository.existsByCpf(cpf)) {
             throw Exception("Cliente não cadastrado no sistema")
         }
     }
@@ -155,10 +162,14 @@ class AccountServImpl : ServiceAcc {
 
 
     fun reactivateAcc(cpf: String) : Account {
-        val acc: Account = accRepository.findByHolderCpf(cpf)
-        acc.active = true
-        acc.balance = 0.0
-        accRepository.save(acc)
+        var acc = Account(null,null,null,null,null,null)
+        if (accRepository.existsByHolderCpf(cpf)) {
+            acc = accRepository.findByHolderCpf(cpf)
+            acc.active = true
+            acc.balance = 0.0
+
+            return accRepository.save(acc)
+        }
 
         return acc
     }
@@ -166,7 +177,7 @@ class AccountServImpl : ServiceAcc {
     fun validateFields(numberAcc: String, cpf: String){
         doNotExist(cpf)
         doNotExistAcc(numberAcc)
-        val acc :  Account = accRepository.findByHolderCpf(cpf)
+        var acc :  Account = accRepository.findByHolderCpf(cpf)
         if (!(acc.numberAcc == numberAcc && acc.holder?.cpf == cpf)){
             throw Exception("Conta e cliente divergentes")
         }
