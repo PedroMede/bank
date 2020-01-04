@@ -2,7 +2,6 @@ package com.zup.bank.serviceImpl
 
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
-import com.zup.bank.enum.TypeOperation
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -25,12 +24,12 @@ class AccountServImpl : ServiceAcc {
     @Autowired
     private lateinit var operationRepository: OperationsRepository
 
-    override fun createAcc(accountDTO: AccountDTO): Account {
+    override fun createAcc(account: AccountDTO): Account {
 
         lateinit var acc: Account
 
-        validateAccount(accountDTO.cpf!!)
-        acc = reactivateAcc(accountDTO.cpf!!)
+        validateAccount(account.cpf!!)
+        acc = reactivateAcc(account.cpf!!)
 
         if (acc != null){
 
@@ -38,7 +37,7 @@ class AccountServImpl : ServiceAcc {
 
         } else {
 
-            var client: Client = clientRepository.findByCpf(accountDTO.cpf!!)
+            val client: Client = clientRepository.findByCpf(account.cpf!!)
             acc = Account(null, "0001", null, client, 0.0)
             acc = accRepository.save(acc)
 
@@ -64,47 +63,47 @@ class AccountServImpl : ServiceAcc {
 
     override fun disableAcc(cpf: String) : Account {
 
-        var acc = getByHolder(cpf)
+        val acc = getByHolder(cpf)
         acc.active = false
 
         return accRepository.save(acc)
 
     }
 
-    override fun deposit(accountDTO: DepositDTO) : Account {
+    override fun deposit(accDTO: DepositDTO) : Account {
 
-        validateFields(accountDTO.numberAcc!!, accountDTO.cpf!!)
+        validateFields(accDTO.numberAcc!!, accDTO.cpf!!)
 
-        var acc: Account = accRepository.findByHolderCpf(accountDTO.cpf!!)
+        val acc: Account = accRepository.findByHolderCpf(accDTO.cpf!!)
 
         val op = Operations(null,null,null,null)
 
-        acc.balance = acc.balance!! + accountDTO.value!!
+        acc.balance = acc.balance!! + accDTO.value!!
 
         //insert on table operations
         op.account = acc
         op.typeOp = "DEPOSIT"
-        op.value = accountDTO.value
+        op.value = accDTO.value
         operationRepository.save(op)
 
         return accRepository.save(acc)
     }
 
-    override fun withdraw(account: DepositDTO) : Account{
-        validateFields(account.numberAcc!!, account.cpf!!)
-        var acc: Account = accRepository.findByHolderCpf(account.cpf!!)
+    override fun withdraw(accDTO: DepositDTO) : Account{
+        validateFields(accDTO.numberAcc!!, accDTO.cpf!!)
+        val acc: Account = accRepository.findByHolderCpf(accDTO.cpf!!)
 
-        if(acc.balance!! < account.value!! || acc.balance!! == 0.0){
+        if(acc.balance!! < accDTO.value!! || acc.balance!! == 0.0){
             throw Exception("Saldo insuficiente, operação cancelada")
         }
 
         val op = Operations(null,null,null,null)
 
-        acc.balance = acc.balance!! - account.value!!
+        acc.balance = acc.balance!! - accDTO.value!!
 
         op.account = acc
         op.typeOp = "WITHDRAW"
-        op.value = account.value
+        op.value = accDTO.value
         operationRepository.save(op)
 
 
@@ -123,7 +122,7 @@ class AccountServImpl : ServiceAcc {
 
 
     fun validateAccount(cpf: String){
-        var acc : Account = accRepository.findByHolderCpf(cpf)
+        val acc : Account = accRepository.findByHolderCpf(cpf)
         if (accRepository.existsByHolderCpf(cpf) && acc.active == true){
             throw Exception("Titular já possui uma conta cadastrada")
         }
@@ -146,7 +145,7 @@ class AccountServImpl : ServiceAcc {
 
 
     fun reactivateAcc(cpf: String) : Account {
-        var acc: Account = accRepository.findByHolderCpf(cpf)
+        val acc: Account = accRepository.findByHolderCpf(cpf)
         acc.active = true
         acc.balance = 0.0
         accRepository.save(acc)
@@ -157,7 +156,7 @@ class AccountServImpl : ServiceAcc {
     fun validateFields(numberAcc: String, cpf: String){
         doNotExist(cpf)
         doNotExistAcc(numberAcc)
-        var acc :  Account = accRepository.findByHolderCpf(cpf)
+        val acc :  Account = accRepository.findByHolderCpf(cpf)
         if (!(acc.numberAcc == numberAcc && acc.holder?.cpf == cpf)){
             throw Exception("Conta e cliente divergentes")
         }

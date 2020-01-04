@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service
 interface ServiceOperations {
 
     fun bankStatement(): MutableList<Operations>
+    fun getAllBankStByNumberAcc(numberAcc: String): MutableList<Operations>
 }

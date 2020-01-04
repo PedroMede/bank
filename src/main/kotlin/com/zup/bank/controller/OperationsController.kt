@@ -3,6 +3,7 @@ package com.zup.bank.controller
 import com.zup.bank.model.Operations
 import com.zup.bank.service.ServiceOperations
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -15,5 +16,11 @@ class OperationsController (val opService: ServiceOperations) {
     fun bankStatement(): MutableList<Operations>{
         return opService.bankStatement()
     }
+
+    @GetMapping("/{numberAcc}")
+    fun getAllByNumberAcc(@PathVariable numberAcc: String): MutableList<Operations>{
+        return opService.getAllBankStByNumberAcc(numberAcc)
+    }
+
 
 }

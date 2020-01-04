@@ -16,5 +16,15 @@ class OperationServImpl : ServiceOperations  {
         return operationRepository.findAll()
     }
 
+    override fun getAllBankStByNumberAcc(numberAcc: String): MutableList<Operations> {
+        validateNumberAcc(numberAcc)
+        return operationRepository.getAllByAccountNumberAcc(numberAcc)
+    }
+
+   fun validateNumberAcc(num: String){
+        if (!operationRepository.existsByAccountNumberAcc(num)){
+            throw Exception("Conta não existe")
+        }
+    }
 
 }
