@@ -115,7 +115,7 @@ class AccountServImpl : ServiceAcc {
 
         op.account = acc
         op.typeOp = "WITHDRAW"
-        op.value = accDTO.value
+        op.value = accDTO.value!! * (-1)
         op.date = dateFormat.format(date)
         operationRepository.save(op)
 
