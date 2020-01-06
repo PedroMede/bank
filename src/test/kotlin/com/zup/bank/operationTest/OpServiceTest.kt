@@ -1,9 +1,13 @@
 package com.zup.bank.operationTest
 
+import com.zup.bank.model.Account
+import com.zup.bank.model.Client
+import com.zup.bank.model.Operations
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.serviceImpl.ClientServImp
 import com.zup.bank.serviceImpl.OperationServImpl
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
@@ -20,9 +24,24 @@ class OpServiceTest {
     @Mock
     lateinit var opRepo: OperationsRepository
 
+    lateinit var acc: Account
+    lateinit var op: Operations
+    lateinit var client: Client
+
+    @Before
+    fun create(){
+        client = Client(1,"Pedro","pedro@gmail.com","42511229846")
+        acc = Account(1,"0001","18", client,100.00,true)
+        op = Operations(1,"DEPOSIT",50.00,"22/12/20 04:40",acc)
+    }
+
+
+
+
     @Test
     fun banckStateOk(){
-        //Mockito.`when`(clientRepository.findAll()).thenReturn(list!!)
+
+        Mockito.`when`(opRepo.findAll()).thenReturn(mutableListOf(op))
 
         opServ.bankStatement()
 
@@ -45,6 +64,21 @@ class OpServiceTest {
 
         Mockito.verify(opRepo, Mockito.times(1)).existsByAccountNumberAcc("123")
     }
+
+    @Test
+    fun getAllBankOk(){
+
+        Mockito.`when`(opRepo.existsByAccountNumberAcc(acc.numberAcc!!)).thenReturn(true)
+        Mockito.`when`(opRepo.getAllByAccountNumberAccOrderByDateDesc("18")).thenReturn(mutableListOf(op))
+
+
+        opServ.getAllBankStByNumberAcc("18")
+
+
+        Mockito.verify(opRepo,Mockito.times(1)).existsByAccountNumberAcc("18")
+        Mockito.verify(opRepo, Mockito.times(1)).getAllByAccountNumberAccOrderByDateDesc("18")
+    }
+
 
 
 

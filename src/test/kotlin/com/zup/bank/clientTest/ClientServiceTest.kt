@@ -31,8 +31,7 @@ class ClientServiceTest {
     @Before
     fun createClient(){
         client = Client(1,"Pedro","pedro@gmail.com","42511229846")
-//        list!![0] = Client(1,"Pedro","pedro@gmail.com","42511229846")
-//        list!![1] = Client(2,"Pedro","pedro@gmail.com","42511229846")
+
     }
 
     @Test(expected = Exception::class)
@@ -49,6 +48,7 @@ class ClientServiceTest {
 
         clientServ.createClient(client)
         Mockito.verify(clientRepository,Mockito.times(1)).existsByCpf("42511229846")
+        Mockito.verify(clientRepository,Mockito.times(1)).save(client)
     }
 
     @Test(expected = Exception::class)
@@ -66,12 +66,12 @@ class ClientServiceTest {
         clientServ.getById(1)
 
         Mockito.verify(clientRepository,Mockito.times(1)).existsById(1)
-
+        Mockito.verify(clientRepository,Mockito.times(1)).findById(1)
     }
 
     @Test
     fun getAllClientOk(){
-        //Mockito.`when`(clientRepository.findAll()).thenReturn(list!!)
+        Mockito.`when`(clientRepository.findAll()).thenReturn(mutableListOf(client))
 
         clientServ.getAllClient()
 
@@ -96,7 +96,7 @@ class ClientServiceTest {
         clientServ.getByCpf("42511229846")
 
         Mockito.verify(clientRepository,Mockito.times(1)).existsByCpf("42511229846")
-
+        Mockito.verify(clientRepository,Mockito.times(1)).findByCpf("42511229846")
     }
 
 
