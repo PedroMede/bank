@@ -38,12 +38,12 @@ class ClientServImp : ServiceClient {
         return clientRepository.findByCpf(cpf)
     }
 
-    override fun getByEmail(email: String): Client {
-         if (!clientRepository.existsByEmail(email)){
-            throw Exception("Email já existente")
-        }
-        return clientRepository.findByEmail(email)
-    }
+//    override fun getByEmail(email: String): Client {
+//         if (!clientRepository.existsByEmail(email)){
+//            throw Exception("Email já existente")
+//        }
+//        return clientRepository.findByEmail(email)
+//    }
 
     fun validateClient(client: Client)  {
         if(clientRepository.existsByCpf(client.cpf!!)){
