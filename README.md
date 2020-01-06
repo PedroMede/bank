@@ -1,8 +1,8 @@
 # zup_bank
 
-###Plano de Treinamento
+### Plano de Treinamento
 
-O objetivo deste projeto é implementar e aplicar as tecnologias usadas no 
+O objetivo deste projeto é implementar e aplicar as tecnologias utilizadas no 
 setor. 
 O projeto consiste em simular as funcionalidades de um sistema bancário.
 
