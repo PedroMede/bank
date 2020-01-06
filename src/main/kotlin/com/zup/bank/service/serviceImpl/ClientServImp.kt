@@ -1,4 +1,4 @@
-package com.zup.bank.serviceImpl
+package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository

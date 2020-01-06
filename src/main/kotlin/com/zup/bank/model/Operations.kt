@@ -15,9 +15,10 @@ class Operations(
      @Column(name = "typeOperation")
      var typeOp: String? = null,
 
+
      @Column(name="value")
      var value:Double? = 0.0,
-
+ //date
      @Column(name="date")
      var date: String? = null,
 

@@ -3,7 +3,8 @@ package com.zup.bank.clientTest
 
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository
-import com.zup.bank.serviceImpl.ClientServImp
+import com.zup.bank.service.serviceImpl.ClientServImp
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -34,11 +35,14 @@ class ClientServiceTest {
 
     }
 
+    //class exception
     @Test(expected = Exception::class)
     fun existClient(){
         Mockito.`when`(clientRepository.existsByCpf("42511229846")).thenReturn(true)
 
         clientServ.createClient(client)
+
+
     }
 
     @Test
@@ -47,6 +51,9 @@ class ClientServiceTest {
         Mockito.`when`(clientRepository.save(Mockito.any(Client::class.java))).thenReturn(client)
 
         clientServ.createClient(client)
+
+        Assert.assertEquals(client,client)
+
         Mockito.verify(clientRepository,Mockito.times(1)).existsByCpf("42511229846")
         Mockito.verify(clientRepository,Mockito.times(1)).save(client)
     }

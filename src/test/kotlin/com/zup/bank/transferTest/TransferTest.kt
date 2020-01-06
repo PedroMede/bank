@@ -2,7 +2,7 @@ package com.zup.bank.transferTest
 
 import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.OperationsRepository
-import com.zup.bank.serviceImpl.TransferServImpl
+import com.zup.bank.service.serviceImpl.TransferServImpl
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

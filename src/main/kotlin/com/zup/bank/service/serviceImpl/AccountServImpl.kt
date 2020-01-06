@@ -1,4 +1,4 @@
-package com.zup.bank.serviceImpl
+package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
