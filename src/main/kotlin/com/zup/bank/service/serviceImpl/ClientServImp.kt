@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ClientServImp : ServiceClient {
+class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
 
-    @Autowired
-    private lateinit var  clientRepository: ClientRepository
 
     override fun createClient(client : Client) : Client {
         validateClient(client)

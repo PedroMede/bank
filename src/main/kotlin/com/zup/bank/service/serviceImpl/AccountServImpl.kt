@@ -16,16 +16,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
-class AccountServImpl : ServiceAcc {
-
-    @Autowired
-    private lateinit var accRepository : AccountRepository
-
-    @Autowired
-    private lateinit var clientRepository: ClientRepository
-
-    @Autowired
-    private lateinit var operationRepository: OperationsRepository
+class AccountServImpl(val accRepository : AccountRepository,
+                      val clientRepository: ClientRepository,
+                      var operationRepository: OperationsRepository) : ServiceAcc {
 
     override fun createAcc(account: AccountDTO): Account {
 

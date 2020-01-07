@@ -15,16 +15,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
-class TransferServImpl : ServiceTransfer{
-
-    @Autowired
-    lateinit var accRepository: AccountRepository
-
-    @Autowired
-    lateinit var opRepository: OperationsRepository
-
-    @Autowired
-    lateinit var transferRepo: TransferRepository
+class TransferServImpl (val accRepository: AccountRepository,
+                        val opRepository: OperationsRepository,
+                        var transferRepo: TransferRepository ): ServiceTransfer{
 
     override fun transfer(opTransfer: TransferDTO): Transfer {
 

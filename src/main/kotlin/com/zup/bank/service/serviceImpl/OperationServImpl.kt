@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class OperationServImpl : ServiceOperations  {
+class OperationServImpl(val operationRepository: OperationsRepository) : ServiceOperations  {
 
-    @Autowired
-    private lateinit var operationRepository: OperationsRepository
 
     override fun bankStatement(): MutableList<Operations> {
         return operationRepository.findAll()
