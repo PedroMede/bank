@@ -47,22 +47,15 @@ class AccountServImpl(val accRepository : AccountRepository,
         }
     }
 
-    override fun getByNumAcc(numAcc: Long): Account {
-        return accRepository.findByNumAcc(numAcc)
-    }
 
     override fun getAllAcc(): MutableList<Account> {
         return accRepository.findAll()
     }
 
-    override fun getByHolder(cpf: String): Account {
-        doNotExist(cpf)
-        return accRepository.findByHolderCpf(cpf)
-    }
 
     override fun disableAcc(cpf: String) : Account {
 
-        val acc = getByHolder(cpf)
+        val acc = getByCpfOrNumberAcc(cpf,"")
         acc.active = false
 
         return accRepository.save(acc)
@@ -124,6 +117,10 @@ class AccountServImpl(val accRepository : AccountRepository,
 
         return accRepository.findByNumberAcc(numberAcc)
 
+    }
+
+    override fun getByCpfOrNumberAcc(cpf: String, numberAcc: String): Account {
+       return accRepository.findByHolderCpfOrNumberAcc(cpf,numberAcc)
     }
 
 

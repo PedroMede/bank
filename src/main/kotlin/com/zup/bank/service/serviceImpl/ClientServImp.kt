@@ -1,5 +1,6 @@
 package com.zup.bank.service.serviceImpl
 
+import com.zup.bank.dto.responseError.ErrorException
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.ServiceClient
@@ -17,21 +18,13 @@ class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
         return client
     }
 
-    override fun getById(id:Long) : Optional<Client> {
-        if (!clientRepository.existsById(id)){
-            throw Exception("Cliente não cadastrado");
-        }
-        return clientRepository.findById(id)
-    }
-
-
     override fun getAllClient(): MutableList<Client> {
        return clientRepository.findAll()
     }
 
     override fun getByCpf(cpf: String): Client {
         if(!clientRepository.existsByCpf(cpf)){
-            throw Exception("Cliente não cadastrado")
+            throw ErrorException()
         }
         return clientRepository.findByCpf(cpf)
     }

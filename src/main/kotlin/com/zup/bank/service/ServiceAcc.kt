@@ -7,12 +7,11 @@ import com.zup.bank.model.Account
 
 interface ServiceAcc {
     fun createAcc(account: AccountDTO): Account
-    fun getByNumAcc(numAcc: Long): Account
     fun getAllAcc(): MutableList<Account>
-    fun getByHolder(cpf: String): Account
     fun disableAcc(cpf:String): Account
     fun deposit (accDTO: DepositDTO): Account
     fun withdraw (accDTO: DepositDTO): Account
     fun balance (numberAcc: String): Account
+    fun getByCpfOrNumberAcc (cpf: String,numberAcc: String): Account
 
 }

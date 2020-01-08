@@ -58,23 +58,23 @@ class ClientServiceTest {
         Mockito.verify(clientRepository,Mockito.times(1)).save(client)
     }
 
-    @Test(expected = Exception::class)
-    fun getByIdNotFound(){
-        Mockito.`when`(clientRepository.existsById(1)).thenReturn(false)
-
-        clientServ.getById(1)
-    }
-
-    @Test
-    fun getByIdFound(){
-        Mockito.`when`(clientRepository.existsById(1)).thenReturn(true)
-        Mockito.`when`(clientRepository.findById(1)).thenReturn(Optional.of(client))
-
-        clientServ.getById(1)
-
-        Mockito.verify(clientRepository,Mockito.times(1)).existsById(1)
-        Mockito.verify(clientRepository,Mockito.times(1)).findById(1)
-    }
+//    @Test(expected = Exception::class)
+//    fun getByIdNotFound(){
+//        Mockito.`when`(clientRepository.existsById(1)).thenReturn(false)
+//
+//        clientServ.getById(1)
+//    }
+//
+//    @Test
+//    fun getByIdFound(){
+//        Mockito.`when`(clientRepository.existsById(1)).thenReturn(true)
+//        Mockito.`when`(clientRepository.findById(1)).thenReturn(Optional.of(client))
+//
+//        clientServ.getById(1)
+//
+//        Mockito.verify(clientRepository,Mockito.times(1)).existsById(1)
+//        Mockito.verify(clientRepository,Mockito.times(1)).findById(1)
+//    }
 
     @Test
     fun getAllClientOk(){

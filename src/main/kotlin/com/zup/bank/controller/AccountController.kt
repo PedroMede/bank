@@ -24,15 +24,15 @@ class AccountController(val accountService: ServiceAcc) {
         return ResponseEntity(accountService.createAcc(acc), HttpStatus.CREATED)
     }
 
-    @GetMapping("/cpf/{cpf}")
-    fun getByHolder (@PathVariable cpf:String): Account {
-        return accountService.getByHolder(cpf)
+    @GetMapping
+    fun getByCpfOrNumberAcc(
+            @RequestParam(required = false,defaultValue = "") cpf:String,
+            @RequestParam(required = false,defaultValue = "") numberAcc: String
+    ): Account {
+        val account = accountService.getByCpfOrNumberAcc(cpf,numberAcc)
+        return account
     }
 
-    @GetMapping("/numAcc/{numAcc}")
-    fun getByNumAcc (@PathVariable numAcc: Long):Account{
-        return accountService.getByNumAcc(numAcc)
-    }
 
     @GetMapping("/balance/{numAcc}")
     fun getByNumberAcc (@PathVariable numAcc: String):Account{
@@ -48,7 +48,7 @@ class AccountController(val accountService: ServiceAcc) {
     @PutMapping("/disableAcc/{cpf}")
     fun disabledAcc(@PathVariable cpf: String) : ResponseEntity<Account>{
 
-        return ResponseEntity(accountService.disableAcc(cpf),HttpStatus.CREATED)
+        return ResponseEntity(accountService.disableAcc(cpf),HttpStatus.OK)
 
     }
 
