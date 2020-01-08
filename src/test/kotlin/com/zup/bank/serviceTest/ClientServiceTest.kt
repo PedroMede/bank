@@ -1,9 +1,11 @@
-package com.zup.bank.clientTest
+package com.zup.bank.serviceTest
 
 
+import com.zup.bank.dto.error.ErrorException
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.serviceImpl.ClientServImp
+import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -13,7 +15,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.test.context.junit4.SpringRunner
-import java.util.*
 
 
 @RunWith(SpringRunner::class)
@@ -36,8 +37,8 @@ class ClientServiceTest {
     }
 
     //class exception
-    @Test(expected = Exception::class)
-    fun existClient(){
+    @Test(expected = ErrorException::class)
+    fun `test if exist client to create a new client`(){
         Mockito.`when`(clientRepository.existsByCpf("42511229846")).thenReturn(true)
 
         clientServ.createClient(client)
@@ -46,35 +47,18 @@ class ClientServiceTest {
     }
 
     @Test
-    fun notExistCli(){
-        Mockito.`when`(clientRepository.existsByCpf("42511229846")).thenReturn(false)
-        Mockito.`when`(clientRepository.save(Mockito.any(Client::class.java))).thenReturn(client)
+    fun `not exist client so create a new client`(){
+        Mockito.`when`(clientRepository.save(client)).thenReturn(client)
 
-        clientServ.createClient(client)
+        var response : Client = clientServ.createClient(client)
 
-        Assert.assertEquals(client,client)
+        Assert.assertEquals(response, client)
+        Assert.assertThat(response, CoreMatchers.notNullValue())
+        Assert.assertThat(response.id, CoreMatchers.`is`(1L))
 
-        Mockito.verify(clientRepository,Mockito.times(1)).existsByCpf("42511229846")
+
         Mockito.verify(clientRepository,Mockito.times(1)).save(client)
     }
-
-//    @Test(expected = Exception::class)
-//    fun getByIdNotFound(){
-//        Mockito.`when`(clientRepository.existsById(1)).thenReturn(false)
-//
-//        clientServ.getById(1)
-//    }
-//
-//    @Test
-//    fun getByIdFound(){
-//        Mockito.`when`(clientRepository.existsById(1)).thenReturn(true)
-//        Mockito.`when`(clientRepository.findById(1)).thenReturn(Optional.of(client))
-//
-//        clientServ.getById(1)
-//
-//        Mockito.verify(clientRepository,Mockito.times(1)).existsById(1)
-//        Mockito.verify(clientRepository,Mockito.times(1)).findById(1)
-//    }
 
     @Test
     fun getAllClientOk(){
@@ -85,7 +69,7 @@ class ClientServiceTest {
         Mockito.verify(clientRepository,Mockito.times(1)).findAll()
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = ErrorException::class)
     fun getByCpfNotFound(){
         Mockito.`when`(clientRepository.existsByCpf("42511229846")).thenReturn(false)
 
@@ -106,7 +90,13 @@ class ClientServiceTest {
         Mockito.verify(clientRepository,Mockito.times(1)).findByCpf("42511229846")
     }
 
+    @Test(expected = ErrorException::class)
+    fun `exist client by cpf`(){
+        Mockito.`when`(clientRepository.existsByCpf(client.cpf!!)).thenThrow(ErrorException())
+        clientServ.validateClient(client)
 
+        Mockito.verify(clientRepository, Mockito.times(1)).existsByCpf(client.cpf!!)
+    }
 
 
 }

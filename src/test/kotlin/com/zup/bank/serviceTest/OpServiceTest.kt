@@ -1,10 +1,12 @@
-package com.zup.bank.operationTest
+package com.zup.bank.serviceTest
 
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
 import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.service.serviceImpl.OperationServImpl
+import org.hamcrest.CoreMatchers
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,14 +37,13 @@ class OpServiceTest {
     }
 
 
-
-
     @Test
-    fun banckStateOk(){
+    fun `bank Statement of all accounts`(){
 
         Mockito.`when`(opRepo.findAll()).thenReturn(mutableListOf(op))
 
         opServ.bankStatement()
+        Assert.assertThat(op, CoreMatchers.notNullValue())
 
         Mockito.verify(opRepo, Mockito.times(1)).findAll()
     }
@@ -53,6 +54,8 @@ class OpServiceTest {
         Mockito.`when`(opRepo.existsByAccountNumberAcc("123")).thenReturn(false)
 
         opServ.validateNumberAcc("123")
+
+
     }
 
     @Test
@@ -65,14 +68,14 @@ class OpServiceTest {
     }
 
     @Test
-    fun getAllBankOk(){
-    //assert
+    fun `get operations bank by number account ok`(){
+
         Mockito.`when`(opRepo.existsByAccountNumberAcc(acc.numberAcc!!)).thenReturn(true)
         Mockito.`when`(opRepo.getAllByAccountNumberAccOrderByDateDesc("18")).thenReturn(mutableListOf(op))
 
 
-        opServ.getAllBankStByNumberAcc("18")
-
+        val listOperation: MutableList<Operations>  =  opServ.getAllBankStByNumberAcc("18")
+        Assert.assertThat(listOperation, CoreMatchers.notNullValue())
 
         Mockito.verify(opRepo,Mockito.times(1)).existsByAccountNumberAcc("18")
         Mockito.verify(opRepo, Mockito.times(1)).getAllByAccountNumberAccOrderByDateDesc("18")

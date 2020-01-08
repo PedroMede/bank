@@ -1,4 +1,4 @@
-package com.zup.bank.transferTest
+package com.zup.bank.serviceTest
 
 import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.OperationsRepository

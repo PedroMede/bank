@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 @Service
 class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
 
-
     override fun createClient(client : Client) : Client {
         validateClient(client)
         clientRepository.save(client)
@@ -34,9 +33,9 @@ class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
 //        return clientRepository.findByEmail(email)
 //    }
 
-    fun validateClient(client: Client)  {
+    fun validateClient(client: Client) {
         if(clientRepository.existsByCpf(client.cpf!!)){
-            throw Exception()
+            throw ErrorException()
         }
     }
 
