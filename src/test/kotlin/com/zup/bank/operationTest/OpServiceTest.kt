@@ -12,6 +12,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.test.context.junit4.SpringRunner
+import java.util.*
 
 @RunWith(SpringRunner::class)
 class OpServiceTest {
@@ -30,7 +31,7 @@ class OpServiceTest {
     fun `create variables that are used in Operation Service`(){
         client = Client(1,"Pedro","pedro@gmail.com","42511229846")
         acc = Account(1,"0001","18", client,100.00,true)
-        op = Operations(1,"DEPOSIT",50.00,"22/12/20 04:40",acc)
+        op = Operations(1,"DEPOSIT",50.00,Date(),acc)
     }
 
 

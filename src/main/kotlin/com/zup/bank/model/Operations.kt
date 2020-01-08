@@ -20,7 +20,7 @@ class Operations(
      var value:Double? = 0.0,
  //date
      @Column(name="date")
-     var date: String? = null,
+     var date: Date = Date(),
 
      @ManyToOne
      var account: Account? = null

@@ -68,18 +68,10 @@ class AccountServImpl(val accRepository : AccountRepository,
 
         val acc: Account = accRepository.findByHolderCpf(accDTO.cpf!!)
 
-        val op = Operations(null,null,null,null)
-
-        val dateFormat : DateFormat = SimpleDateFormat("dd/MM/yy HH:mm")
-        val date = Date()
-
         acc.balance = acc.balance!! + accDTO.value!!
 
-        //insert on table operations
-        op.account = acc
-        op.typeOp = "DEPOSIT"
-        op.value = accDTO.value
-        op.date = dateFormat.format(date)
+        val op = Operations(null,"DEPOSIT",accDTO.value, Date(),acc)
+
         operationRepository.save(op)
 
         return accRepository.save(acc)
@@ -89,20 +81,13 @@ class AccountServImpl(val accRepository : AccountRepository,
         validateFields(accDTO.numberAcc!!, accDTO.cpf!!)
         val acc: Account = accRepository.findByHolderCpf(accDTO.cpf!!)
 
-        if(acc.balance!! < accDTO.value!! || acc.balance!! == 0.0){
+        if(acc.balance!! < accDTO.value!!){
             throw Exception("Saldo insuficiente, operação cancelada")
         }
 
-        val op = Operations(null,null,null,null,null)
-
-        val dateFormat : DateFormat = SimpleDateFormat("dd/MM/yy HH:mm")
-        val date = Date()
         acc.balance = acc.balance!! - accDTO.value!!
 
-        op.account = acc
-        op.typeOp = "WITHDRAW"
-        op.value = accDTO.value!! * (-1)
-        op.date = dateFormat.format(date)
+        val op = Operations(null,"WITHDRAW",accDTO.value!! * (-1), Date(), acc)
         operationRepository.save(op)
 
 

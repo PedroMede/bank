@@ -1,6 +1,5 @@
-package com.zup.bank.dto.responseError
+package com.zup.bank.dto.error
 
-import org.springframework.beans.BeanUtils
 import java.lang.RuntimeException
 import java.util.*
 
@@ -8,7 +7,9 @@ class ErrorException(
 
             var statusError: Int? = null,
             var timestamp: Date? = null,
-            var warnings: String? = null
+            var warnings: String? = null,
+            var field:String? = null,
+            var errors: MutableList<String>? = null
 
 ):RuntimeException()
 {

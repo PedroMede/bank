@@ -26,7 +26,7 @@ class AccountController(val accountService: ServiceAcc) {
 
     @GetMapping
     fun getByCpfOrNumberAcc(
-            @RequestParam(required = false,defaultValue = "") cpf:String,
+            @RequestParam(required = false,defaultValue = "") cpf:String ,
             @RequestParam(required = false,defaultValue = "") numberAcc: String
     ): Account {
         val account = accountService.getByCpfOrNumberAcc(cpf,numberAcc)

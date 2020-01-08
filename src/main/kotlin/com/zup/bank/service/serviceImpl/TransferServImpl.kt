@@ -21,9 +21,6 @@ class TransferServImpl (val accRepository: AccountRepository,
 
     override fun transfer(opTransfer: TransferDTO): Transfer {
 
-        val dateFormat : DateFormat = SimpleDateFormat("dd/MM/yy HH:mm")
-        val date = Date()
-
         existOrEqualsAcc(opTransfer.originAcc!!,opTransfer.destinyAcc!!)
 
         val origin : Account = accRepository.findByNumberAcc(opTransfer.originAcc!!)
@@ -40,21 +37,13 @@ class TransferServImpl (val accRepository: AccountRepository,
         accRepository.save(origin)
         accRepository.save(destiny)
 
+        val opOringin = Operations(null,"TRANSFER",opTransfer.value!! * (-1),Date(),origin)
 
-        val opOrin = Operations(null,null,null,null)
-        opOrin.account = origin
-        opOrin.typeOp = "TRANSFER"
-        opOrin.value = opTransfer.value!! * (-1)
-        opOrin.date = dateFormat.format(date)
-        opRepository.save(opOrin)
+        opRepository.save(opOringin)
 
-        val opDest = Operations(null,null,null,null)
-        opDest.account = destiny
-        opDest.typeOp = "TRANSFER"
-        opDest.value = opTransfer.value!!
-        opDest.date = dateFormat.format(date)
-        opRepository.save(opDest)
+        val opDestiny = Operations(null,"TRANSFER",opTransfer.value!!, Date(),destiny)
 
+        opRepository.save(opDestiny)
 
         return transferRepo.save(transfer)
     }

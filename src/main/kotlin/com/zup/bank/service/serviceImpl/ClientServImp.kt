@@ -1,12 +1,10 @@
 package com.zup.bank.service.serviceImpl
 
-import com.zup.bank.dto.responseError.ErrorException
+import com.zup.bank.dto.error.ErrorException
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.ServiceClient
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
@@ -38,7 +36,7 @@ class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
 
     fun validateClient(client: Client)  {
         if(clientRepository.existsByCpf(client.cpf!!)){
-            throw Exception("Cliente já existe")
+            throw Exception()
         }
     }
 
