@@ -61,7 +61,6 @@ class AccountServImpl(val accRepository : AccountRepository,
         return accRepository.save(acc)
 
     }
-
     override fun deposit(accDTO: DepositDTO) : Account {
 
         validateFields(accDTO.numberAcc!!, accDTO.cpf!!)

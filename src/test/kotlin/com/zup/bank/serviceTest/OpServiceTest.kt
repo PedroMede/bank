@@ -3,7 +3,9 @@ package com.zup.bank.serviceTest
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
+import com.zup.bank.repository.ClientRepository
 import com.zup.bank.repository.OperationsRepository
+import com.zup.bank.service.serviceImpl.ClientServImp
 import com.zup.bank.service.serviceImpl.OperationServImpl
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
@@ -16,14 +18,13 @@ import org.mockito.Mockito
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
 
-@RunWith(SpringRunner::class)
 class OpServiceTest {
 
-    @InjectMocks
-    lateinit var opServ: OperationServImpl
+    private val operationServ = OperationServImpl(
 
-    @Mock
-    lateinit var opRepo: OperationsRepository
+            Mockito.mock(OperationsRepository::class.java)
+
+    )
 
     lateinit var acc: Account
     lateinit var op: Operations
@@ -40,45 +41,44 @@ class OpServiceTest {
     @Test
     fun `bank Statement of all accounts`(){
 
-        Mockito.`when`(opRepo.findAll()).thenReturn(mutableListOf(op))
+        Mockito.`when`(operationServ.operationRepository.findAll()).thenReturn(mutableListOf(op))
 
-        opServ.bankStatement()
+        operationServ.bankStatement()
         Assert.assertThat(op, CoreMatchers.notNullValue())
 
-        Mockito.verify(opRepo, Mockito.times(1)).findAll()
+        Mockito.verify(operationServ.operationRepository, Mockito.times(1)).findAll()
     }
 
 
     @Test(expected = Exception::class)
     fun notexistAccNum(){
-        Mockito.`when`(opRepo.existsByAccountNumberAcc("123")).thenReturn(false)
+        Mockito.`when`(operationServ.operationRepository.existsByAccountNumberAcc("123")).thenReturn(false)
 
-        opServ.validateNumberAcc("123")
-
+        operationServ.validateNumberAcc("123")
 
     }
 
     @Test
     fun existAccNum(){
-        Mockito.`when`(opRepo.existsByAccountNumberAcc("123")).thenReturn(true)
+        Mockito.`when`(operationServ.operationRepository.existsByAccountNumberAcc("123")).thenReturn(true)
 
-        opServ.validateNumberAcc("123")
+        operationServ.validateNumberAcc("123")
 
-        Mockito.verify(opRepo, Mockito.times(1)).existsByAccountNumberAcc("123")
+        Mockito.verify(operationServ.operationRepository, Mockito.times(1)).existsByAccountNumberAcc("123")
     }
 
     @Test
     fun `get operations bank by number account ok`(){
 
-        Mockito.`when`(opRepo.existsByAccountNumberAcc(acc.numberAcc!!)).thenReturn(true)
-        Mockito.`when`(opRepo.getAllByAccountNumberAccOrderByDateDesc("18")).thenReturn(mutableListOf(op))
+        Mockito.`when`(operationServ.operationRepository.existsByAccountNumberAcc(acc.numberAcc!!)).thenReturn(true)
+        Mockito.`when`(operationServ.operationRepository.getAllByAccountNumberAccOrderByDateDesc("18")).thenReturn(mutableListOf(op))
 
 
-        val listOperation: MutableList<Operations>  =  opServ.getAllBankStByNumberAcc("18")
+        val listOperation: MutableList<Operations>  =  operationServ.getAllBankStByNumberAcc("18")
         Assert.assertThat(listOperation, CoreMatchers.notNullValue())
 
-        Mockito.verify(opRepo,Mockito.times(1)).existsByAccountNumberAcc("18")
-        Mockito.verify(opRepo, Mockito.times(1)).getAllByAccountNumberAccOrderByDateDesc("18")
+        Mockito.verify(operationServ.operationRepository,Mockito.times(1)).existsByAccountNumberAcc("18")
+        Mockito.verify(operationServ.operationRepository, Mockito.times(1)).getAllByAccountNumberAccOrderByDateDesc("18")
     }
 
 
