@@ -15,18 +15,15 @@ import javax.validation.Valid
 class ClientController(val clientService: ServiceClient ) {
 
     @PostMapping
-    fun createClient(@Valid @RequestBody  client: Client, bindingResult: BindingResult):ResponseEntity<Client>{
-        if(bindingResult.hasErrors()){
-            badRequest().body(bindingResult.allErrors)
-        }
+    fun createClient(@Valid @RequestBody  client: Client):ResponseEntity<Client>{
 
         return ResponseEntity(clientService.createClient(client),HttpStatus.CREATED)
 
     }
 
     @GetMapping
-    fun getByCpf(@RequestParam(required = false) cpf: String) : Client{
-        return clientService.getByCpf(cpf)
+    fun getByCpf(@RequestParam(required = false) cpf: String) : ResponseEntity<Client>{
+        return ResponseEntity(clientService.getByCpf(cpf),HttpStatus.OK)
     }
 
     @GetMapping("/getAll")

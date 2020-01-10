@@ -30,7 +30,7 @@ class AccountController(val accountService: ServiceAcc) {
             @RequestParam(required = false,defaultValue = "") numberAcc: String
     ): Account {
         val account = accountService.getByCpfOrNumberAcc(cpf,numberAcc)
-        return account
+        return account!!
     }
 
 

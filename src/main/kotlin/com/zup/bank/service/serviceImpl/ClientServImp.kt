@@ -1,13 +1,22 @@
 package com.zup.bank.service.serviceImpl
 
-import com.zup.bank.dto.error.ErrorException
+import com.zup.bank.exception.AllCodeErrors
+import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
+import com.zup.bank.exception.Messages
+import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.ServiceClient
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
-class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
+class ClientServImp (
+
+        val  clientRepository: ClientRepository
+//        val  messageException: Messages
+
+): ServiceClient {
 
     override fun createClient(client : Client) : Client {
         validateClient(client)
@@ -20,22 +29,14 @@ class ClientServImp (val  clientRepository: ClientRepository): ServiceClient {
     }
 
     override fun getByCpf(cpf: String): Client {
-        if(!clientRepository.existsByCpf(cpf)){
-            throw ErrorException()
-        }
         return clientRepository.findByCpf(cpf)
     }
 
-//    override fun getByEmail(email: String): Client {
-//         if (!clientRepository.existsByEmail(email)){
-//            throw Exception("Email já existente")
-//        }
-//        return clientRepository.findByEmail(email)
-//    }
-
     fun validateClient(client: Client) {
         if(clientRepository.existsByCpf(client.cpf!!)){
-            throw ErrorException()
+            throw ExceptionClientAlreadyReg(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                AllCodeErrors.CODEACCOUNTREGISTERED, "cpf")
         }
     }
 

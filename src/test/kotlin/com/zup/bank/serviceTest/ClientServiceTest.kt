@@ -1,23 +1,18 @@
 package com.zup.bank.serviceTest
 
 
-import com.zup.bank.dto.error.ErrorException
+import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
 import com.zup.bank.model.Client
-import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.ClientRepository
-import com.zup.bank.repository.OperationsRepository
-import com.zup.bank.service.serviceImpl.AccountServImpl
 import com.zup.bank.service.serviceImpl.ClientServImp
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.web.bind.MethodArgumentNotValidException
 
 
 class ClientServiceTest {
@@ -39,7 +34,7 @@ class ClientServiceTest {
     }
 
     //class exception
-    @Test(expected = ErrorException::class)
+    @Test(expected = ExceptionClientHasAccount::class)
     fun `test if exist client to create a new client`(){
         Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(true)
 
@@ -71,7 +66,7 @@ class ClientServiceTest {
         Mockito.verify(clientServ.clientRepository,Mockito.times(1)).findAll()
     }
 
-    @Test(expected = ErrorException::class)
+    @Test(expected = ExceptionClientHasAccount::class)
     fun getByCpfNotFound(){
         Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
 
@@ -92,12 +87,23 @@ class ClientServiceTest {
         Mockito.verify(clientServ.clientRepository,Mockito.times(1)).findByCpf("42511229846")
     }
 
-    @Test(expected = ErrorException::class)
+    @Test(expected = ExceptionClientHasAccount::class)
     fun `exist client by cpf`(){
-        Mockito.`when`(clientServ.clientRepository.existsByCpf(client.cpf!!)).thenThrow(ErrorException())
+//        Mockito.`when`(clientServ.clientRepository.existsByCpf(client.cpf!!)).thenThrow(ExceptionClientHasAccount(1))
         clientServ.validateClient(client)
 
         Mockito.verify(clientServ.clientRepository, Mockito.times(1)).existsByCpf(client.cpf!!)
+    }
+
+    @Test(expected = MethodArgumentNotValidException::class)
+    fun `client null`(){
+        val clientNull = Client(1,null,"pedro@gmail.com","42511229846")
+        Mockito.`when`(clientServ.clientRepository.save(clientNull)).thenThrow(MethodArgumentNotValidException::class.java)
+
+        clientServ.createClient(clientNull)
+
+        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).save(clientNull)
+
     }
 
 

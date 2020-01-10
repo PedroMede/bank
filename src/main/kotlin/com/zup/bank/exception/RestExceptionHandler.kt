@@ -1,18 +1,16 @@
 package com.zup.bank.exception
 
-import com.zup.bank.dto.error.ErrorException
-import com.zup.bank.dto.error.ResponseErrorExcep
+import com.zup.bank.exception.customErrors.*
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.context.request.WebRequest
 import java.util.*
 
 
 @ControllerAdvice
-class RestExceptionHandler {
+class RestExceptionHandler(val message: Messages) {
 
     @ExceptionHandler(KotlinNullPointerException::class)
     fun handleNullpointer(e: KotlinNullPointerException ) : ResponseEntity<Any>{
@@ -21,18 +19,28 @@ class RestExceptionHandler {
         return ResponseEntity.badRequest().build()
     }
 
-    @ExceptionHandler(ErrorException::class)
-    fun handleNotFound(exception: ErrorException) : ResponseEntity<ResponseErrorExcep>{
-        var responseErrorExcep =
-                ResponseErrorExcep(HttpStatus.NOT_FOUND.value(),Date(),"Cpf not exist","",null)
+    @ExceptionHandler(ExceptionClientHasAccount::class)
+    fun handleClientHasAccount(e: ExceptionClientHasAccount) : ResponseEntity<ResponseClientHasAcc>{
+        val responseErrorExcep =
+            ResponseClientHasAcc(e.statusError, e.warnings, e.field, e.timestamp)
 
-            return ResponseEntity(responseErrorExcep, HttpStatus.NOT_FOUND)
+            return ResponseEntity(responseErrorExcep, HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
+    @ExceptionHandler(ExceptionClientAlreadyReg::class)
+    fun handleClientAlreadyReg(e: ExceptionClientAlreadyReg) : ResponseEntity<RespClientAlreadyReg>{
+        val responseErrorExcep =
+            RespClientAlreadyReg(e.statusError, e.warnings, e.field, e.timestamp)
+
+        return ResponseEntity(responseErrorExcep, HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
     @ExceptionHandler(EmptyResultDataAccessException::class)
-    fun handleEmptyResultDataAccessException(ex: EmptyResultDataAccessException, request: WebRequest) : ResponseEntity<ResponseErrorExcep>{
-        var responseErrorExcep =
-                ResponseErrorExcep(HttpStatus.NOT_FOUND.value(),Date(),"Cpf or Account not exist","",null)
+    fun handleEmptyResultDataAccessException(e: EmptyResultDataAccessException) : ResponseEntity<ResponseEmptyResult>{
+        val responseErrorExcep = ResponseEmptyResult(
+            HttpStatus.NOT_FOUND.value(),
+            AllCodeErrors.CODEACCOUNTREGISTERED,
+            Date())
 
         return ResponseEntity(responseErrorExcep, HttpStatus.NOT_FOUND)
     }

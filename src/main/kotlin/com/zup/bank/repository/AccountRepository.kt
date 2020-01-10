@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param
 
 interface AccountRepository : JpaRepository<Account, Long> {
 
-    fun findByNumAcc(numAcc: Long): Account
     fun findByHolderCpf(cpf: String) : Account
     fun findByNumberAcc(numberAcc: String) : Account
     fun existsByNumberAcc(numAcc: String): Boolean
@@ -16,5 +15,5 @@ interface AccountRepository : JpaRepository<Account, Long> {
 
     @Query("SELECT acc FROM Account acc " +
             "WHERE acc.active=true AND (acc.holder.cpf = :cpf OR acc.numberAcc = :numberAcc)")
-    fun findByHolderCpfOrNumberAcc(@Param(value = "cpf") cpf: String, @Param(value = "numberAcc") numberAcc:String): Account
+    fun findByHolderCpfOrNumberAcc(@Param(value = "cpf") cpf: String, @Param(value = "numberAcc") numberAcc:String): Account?
 }

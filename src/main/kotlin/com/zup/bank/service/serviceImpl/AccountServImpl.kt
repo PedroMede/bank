@@ -2,6 +2,9 @@ package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
+import com.zup.bank.exception.AllCodeErrors
+import com.zup.bank.exception.Messages
+import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -9,16 +12,18 @@ import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.service.ServiceAcc
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
-class AccountServImpl(val accRepository : AccountRepository,
-                      val clientRepository: ClientRepository,
-                      var operationRepository: OperationsRepository) : ServiceAcc {
+class AccountServImpl(
+
+        val accRepository : AccountRepository,
+        val clientRepository: ClientRepository,
+        var operationRepository: OperationsRepository
+//        val message: Messages
+) : ServiceAcc {
 
     override fun createAcc(account: AccountDTO): Account {
 
@@ -104,16 +109,25 @@ class AccountServImpl(val accRepository : AccountRepository,
     }
 
     override fun getByCpfOrNumberAcc(cpf: String, numberAcc: String): Account {
-       return accRepository.findByHolderCpfOrNumberAcc(cpf,numberAcc)
+
+        val account = accRepository.findByHolderCpfOrNumberAcc(cpf,numberAcc)
+
+        if(account == null){
+
+        }
+
+        return account!!
     }
 
 
     fun validateAccount(cpf: String){
 
         if(accRepository.existsByHolderCpf(cpf)) {
-            var acc: Account = accRepository.findByHolderCpf(cpf)
+            val acc: Account = accRepository.findByHolderCpf(cpf)
             if ( acc.active == true) {
-                throw Exception("Titular já possui uma conta cadastrada")
+                throw ExceptionClientHasAccount(
+                    HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                    AllCodeErrors.CODEACCOUNTREGISTERED, "cpf")
             }
         }
 
