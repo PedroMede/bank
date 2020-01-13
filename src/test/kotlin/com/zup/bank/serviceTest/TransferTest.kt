@@ -1,6 +1,7 @@
 package com.zup.bank.serviceTest
 
 import com.zup.bank.dto.TransferDTO
+import com.zup.bank.enum.TypeOperation
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -45,7 +46,7 @@ class TransferTest {
         transferDTO  =  TransferDTO("18","19",20.00 )
         clientOrigin = Client(1,"Pedro","pedro@gmail.com","42511229846")
         accOrigin = Account(1,"0001","18", clientOrigin,100.00,true)
-        operations = Operations(1,"TRANSFER",50.00, Date(),accOrigin)
+        operations = Operations(1,TypeOperation.DEPOSIT,50.00, Date(),accOrigin)
         clientDestiny = Client(2,"Lucia","lucia@gmail.com","88804879653")
         accDestiny = Account(1,"0001","19", clientOrigin,100.00,true)
         transfer = Transfer(null,accOrigin,accDestiny,20.00)

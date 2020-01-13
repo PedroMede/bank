@@ -2,6 +2,7 @@ package com.zup.bank.serviceTest
 
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
+import com.zup.bank.enum.TypeOperation
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -48,8 +49,8 @@ class AccountServiceTest {
         client = Client(1,"Pedro","pedro@gmail.com","42511229846")
         account = Account(1,"0001","18", client,100.00,true)
         account2 = Account(1,"0001","19", client,100.00,false)
-        operations = Operations(1,"DEPOSIT",50.00, Date(), account)
-        operations2 = Operations(1,"WITHDRAW",50.00, Date(), account)
+        operations = Operations(1,TypeOperation.DEPOSIT,50.00, Date(), account)
+        operations2 = Operations(1,TypeOperation.WITHDRAW,50.00, Date(), account)
         accountDTO = AccountDTO("42511229846")
         depositDTO = DepositDTO("42511229846","18",20.00)
     }
@@ -226,7 +227,7 @@ class AccountServiceTest {
     fun `test client not exist`(){
         Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(false)
 
-        accountServ.doNotExist(client.cpf!!)
+//        accountServ.doNotExist(client.cpf!!)
 
         Mockito.verify(accountServ.clientRepository,Mockito.times(1))
                 .existsByCpf(client.cpf!!)

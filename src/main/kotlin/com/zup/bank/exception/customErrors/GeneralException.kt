@@ -4,7 +4,7 @@ import com.zup.bank.exception.AllCodeErrors
 import java.lang.RuntimeException
 import java.util.*
 
-open class GenaralException(
+open class GeneralException(
 
     val statusError: Int,
     val warnings: AllCodeErrors,

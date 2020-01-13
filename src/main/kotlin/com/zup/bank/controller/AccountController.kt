@@ -16,10 +16,7 @@ import javax.validation.Valid
 class AccountController(val accountService: ServiceAcc) {
 
     @PostMapping
-    fun createAcc(@Valid @RequestBody acc: AccountDTO, bindResult: BindingResult): ResponseEntity<Account>{
-        if(bindResult.hasErrors()){
-            badRequest().body(bindResult.allErrors)
-        }
+    fun createAcc(@Valid @RequestBody acc: AccountDTO): ResponseEntity<Account>{
 
         return ResponseEntity(accountService.createAcc(acc), HttpStatus.CREATED)
     }
@@ -29,8 +26,7 @@ class AccountController(val accountService: ServiceAcc) {
             @RequestParam(required = false,defaultValue = "") cpf:String ,
             @RequestParam(required = false,defaultValue = "") numberAcc: String
     ): Account {
-        val account = accountService.getByCpfOrNumberAcc(cpf,numberAcc)
-        return account!!
+        return accountService.getByCpfOrNumberAcc(cpf,numberAcc)
     }
 
 
@@ -53,23 +49,17 @@ class AccountController(val accountService: ServiceAcc) {
     }
 
     @PutMapping("/deposit")
-    fun deposit(@Valid @RequestBody depositDTO: DepositDTO , bindResult: BindingResult): ResponseEntity<Account>{
+    fun deposit(@Valid @RequestBody depositDTO: DepositDTO ): ResponseEntity<Account>{
 
-        if(bindResult.hasErrors()){
-            badRequest().body(bindResult.allErrors)
-        }
 
-        return ResponseEntity(accountService.deposit(depositDTO),HttpStatus.CREATED)
+        return ResponseEntity(accountService.deposit(depositDTO),HttpStatus.ACCEPTED)
     }
 
     @PutMapping("/withdraw")
-    fun withdraw(@Valid @RequestBody acc: DepositDTO , bindResult: BindingResult): ResponseEntity<Account>{
+    fun withdraw(@Valid @RequestBody acc: DepositDTO ): ResponseEntity<Account>{
 
-        if(bindResult.hasErrors()){
-            badRequest().body(bindResult.allErrors)
-        }
 
-        return ResponseEntity(accountService.withdraw(acc),HttpStatus.CREATED)
+        return ResponseEntity(accountService.withdraw(acc),HttpStatus.ACCEPTED)
     }
 
 

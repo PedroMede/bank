@@ -15,7 +15,6 @@ class ClientServImp (
 
         val  clientRepository: ClientRepository
 //        val  messageException: Messages
-
 ): ServiceClient {
 
     override fun createClient(client : Client) : Client {
@@ -36,7 +35,7 @@ class ClientServImp (
         if(clientRepository.existsByCpf(client.cpf!!)){
             throw ExceptionClientAlreadyReg(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                AllCodeErrors.CODEACCOUNTREGISTERED, "cpf")
+                AllCodeErrors.CODECLIENTREGISTERED, "cpf")
         }
     }
 

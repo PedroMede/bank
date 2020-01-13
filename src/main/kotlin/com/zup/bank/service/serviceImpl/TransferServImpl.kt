@@ -1,6 +1,9 @@
 package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.dto.TransferDTO
+import com.zup.bank.enum.TypeOperation
+import com.zup.bank.exception.AllCodeErrors
+import com.zup.bank.exception.customErrors.NotSufficientBalanceException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Operations
 import com.zup.bank.model.Transfer
@@ -9,6 +12,7 @@ import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.repository.TransferRepository
 import com.zup.bank.service.ServiceTransfer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -17,7 +21,7 @@ import java.util.*
 @Service
 class TransferServImpl (val accRepository: AccountRepository,
                         val opRepository: OperationsRepository,
-                        var transferRepo: TransferRepository ): ServiceTransfer{
+                        val transferRepo: TransferRepository ): ServiceTransfer{
 
     override fun transfer(opTransfer: TransferDTO): Transfer {
 
@@ -27,7 +31,8 @@ class TransferServImpl (val accRepository: AccountRepository,
         val destiny: Account = accRepository.findByNumberAcc(opTransfer.destinyAcc!!)
 
         if(origin.balance!! < opTransfer.value!!){
-            throw Exception("Saldo insulficiente para transferência")
+            throw NotSufficientBalanceException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                AllCodeErrors.CODEBALANCENOTSUFF)
         }
 
         var transfer = Transfer(null,origin,destiny,opTransfer.value)
@@ -37,11 +42,11 @@ class TransferServImpl (val accRepository: AccountRepository,
         accRepository.save(origin)
         accRepository.save(destiny)
 
-        val opOringin = Operations(null,"TRANSFER",opTransfer.value!! * (-1),Date(),origin)
+        val opOringin = Operations(null,TypeOperation.TRANFER,opTransfer.value!! * (-1),Date(),origin)
 
         opRepository.save(opOringin)
 
-        val opDestiny = Operations(null,"TRANSFER",opTransfer.value!!, Date(),destiny)
+        val opDestiny = Operations(null,TypeOperation.TRANFER,opTransfer.value!!, Date(),destiny)
 
         opRepository.save(opDestiny)
 
@@ -49,14 +54,6 @@ class TransferServImpl (val accRepository: AccountRepository,
     }
 
     fun existOrEqualsAcc(originAcc: String, destinyAcc: String){
-
-       if(!accRepository.existsByNumberAcc(originAcc)) {
-           throw Exception("Conta de origem inválida")
-       }
-
-        if(!accRepository.existsByNumberAcc(destinyAcc)) {
-            throw Exception("Conta de destino inválida")
-        }
 
         if(originAcc == destinyAcc){
             throw Exception("Tranferencia cancelada, origem e destino iguais")

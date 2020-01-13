@@ -1,5 +1,6 @@
 package com.zup.bank.model
 
+import com.zup.bank.enum.TypeOperation
 import java.util.*
 import javax.persistence.*
 
@@ -13,7 +14,7 @@ class Operations(
      var id:Long? = null,
 
      @Column(name = "typeOperation")
-     var typeOp: String? = null,
+     var typeOp: TypeOperation? = null,
 
 
      @Column(name="value")

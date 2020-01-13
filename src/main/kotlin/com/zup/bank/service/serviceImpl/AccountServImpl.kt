@@ -2,9 +2,12 @@ package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
+import com.zup.bank.enum.TypeOperation
 import com.zup.bank.exception.AllCodeErrors
 import com.zup.bank.exception.Messages
+import com.zup.bank.exception.customErrors.AccountAndClientDivergentException
 import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
+import com.zup.bank.exception.customErrors.NotSufficientBalanceException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -21,17 +24,15 @@ class AccountServImpl(
 
         val accRepository : AccountRepository,
         val clientRepository: ClientRepository,
-        var operationRepository: OperationsRepository
-//        val message: Messages
+        val operationRepository: OperationsRepository
+//       val message: Messages
 ) : ServiceAcc {
 
     override fun createAcc(account: AccountDTO): Account {
 
         lateinit var acc: Account
 
-
         validateAccount(account.cpf!!)
-
 
         acc = reactivateAcc(account.cpf!!)
 
@@ -41,7 +42,7 @@ class AccountServImpl(
 
         } else {
 
-            var client: Client = clientRepository.findByCpf(account.cpf!!)
+            val client: Client = clientRepository.findByCpf(account.cpf!!)
             acc = Account(null, "0001", null, client, 0.0)
             acc = accRepository.save(acc)
 
@@ -74,7 +75,7 @@ class AccountServImpl(
 
         acc.balance = acc.balance!! + accDTO.value!!
 
-        val op = Operations(null,"DEPOSIT",accDTO.value, Date(),acc)
+        val op = Operations(null,TypeOperation.DEPOSIT,accDTO.value, Date(),acc)
 
         operationRepository.save(op)
 
@@ -86,65 +87,39 @@ class AccountServImpl(
         val acc: Account = accRepository.findByHolderCpf(accDTO.cpf!!)
 
         if(acc.balance!! < accDTO.value!!){
-            throw Exception("Saldo insuficiente, operação cancelada")
+            throw NotSufficientBalanceException(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                AllCodeErrors.CODEBALANCENOTSUFF)
         }
 
         acc.balance = acc.balance!! - accDTO.value!!
 
-        val op = Operations(null,"WITHDRAW",accDTO.value!! * (-1), Date(), acc)
+        val op = Operations(null,TypeOperation.WITHDRAW,accDTO.value!! * (-1), Date(), acc)
         operationRepository.save(op)
-
 
         return accRepository.save(acc)
     }
 
     override fun balance(numberAcc: String) : Account {
 
-        if (accRepository.findByNumberAcc(numberAcc) == null){
-            throw Exception("Conta inexistente")
-        }
-
         return accRepository.findByNumberAcc(numberAcc)
-
     }
 
     override fun getByCpfOrNumberAcc(cpf: String, numberAcc: String): Account {
 
-        val account = accRepository.findByHolderCpfOrNumberAcc(cpf,numberAcc)
-
-        if(account == null){
-
-        }
-
-        return account!!
+        return  accRepository.findByHolderCpfOrNumberAcc(cpf,numberAcc)
     }
 
 
     fun validateAccount(cpf: String){
 
-        if(accRepository.existsByHolderCpf(cpf)) {
+        if (accRepository.existsByHolderCpf(cpf)) {
             val acc: Account = accRepository.findByHolderCpf(cpf)
-            if ( acc.active == true) {
+            if (acc.active == true) {
                 throw ExceptionClientHasAccount(
                     HttpStatus.UNPROCESSABLE_ENTITY.value(),
                     AllCodeErrors.CODEACCOUNTREGISTERED, "cpf")
             }
-        }
-
-        if (!clientRepository.existsByCpf(cpf)) {
-            throw Exception("Cliente não cadastrado no sistema")
-        }
-    }
-
-    fun doNotExist(cpf: String){
-        if (!clientRepository.existsByCpf(cpf)){
-            throw Exception("Cliente não cadastrado no sistema")
-        }
-    }
-
-    fun doNotExistAcc(numberAcc : String){
-        if (!accRepository.existsByNumberAcc(numberAcc)){
-            throw Exception("Conta inválida")
         }
     }
 
@@ -163,11 +138,11 @@ class AccountServImpl(
     }
 
     fun validateFields(numberAcc: String, cpf: String){
-        doNotExist(cpf)
-        doNotExistAcc(numberAcc)
-        var acc :  Account = accRepository.findByHolderCpf(cpf)
+        val acc :  Account = accRepository.findByHolderCpf(cpf)
         if (!(acc.numberAcc == numberAcc && acc.holder?.cpf == cpf)){
-            throw Exception("Conta e cliente divergentes")
+            throw AccountAndClientDivergentException(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                AllCodeErrors.CODEACCANDCLIENTDIVERENT,"")
         }
     }
 }

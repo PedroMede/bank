@@ -4,10 +4,10 @@ import org.hibernate.validator.constraints.br.CPF
 import javax.validation.constraints.NotBlank
 
 
-data class AccountDTO (
+ class AccountDTO (
 
-        @field: [NotBlank(message="cpf obrigatório")]
-        @field: [CPF(message="Cpf inválido")]
+        @field:NotBlank(message="cpf obrigatório")
+        @field:CPF(message="Cpf inválido")
         var cpf : String? = null
 )
 {}

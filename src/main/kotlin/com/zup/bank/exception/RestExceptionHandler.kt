@@ -44,4 +44,31 @@ class RestExceptionHandler(val message: Messages) {
 
         return ResponseEntity(responseErrorExcep, HttpStatus.NOT_FOUND)
     }
+
+//    @ExceptionHandler(MethodArgumentNotValidException::class)
+//    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<*>{
+//
+//        return ResponseEntity(,HttpStatus.BAD_REQUEST)
+//    }
+
+    @ExceptionHandler(NotSufficientBalanceException::class)
+    fun handleNotSuffucientBalanceException(e:NotSufficientBalanceException): ResponseEntity<ResponseEmptyResult>{
+        val responseError = ResponseEmptyResult(e.statusError,e.warnings,e.timestamp)
+
+        return ResponseEntity(responseError,HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
+    @ExceptionHandler(AccountAndClientDivergentException::class)
+    fun handleAccountAndClientDivergentException(e: AccountAndClientDivergentException): ResponseEntity<ResponseEmptyResult>{
+        val responseErrorExcep = ResponseEmptyResult(e.statusError,e.warnings, e.timestamp)
+
+        return ResponseEntity(responseErrorExcep,HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
+    @ExceptionHandler(AccountNotFoundException::class)
+    fun handleAccountNotFoundException(e: AccountNotFoundException): ResponseEntity<ResponseEmptyResult>{
+        val responseErrorExcep = ResponseEmptyResult(e.statusError,e.warnings, e.timestamp)
+
+        return ResponseEntity(responseErrorExcep,HttpStatus.NOT_FOUND)
+    }
 }

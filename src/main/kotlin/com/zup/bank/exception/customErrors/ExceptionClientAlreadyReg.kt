@@ -10,5 +10,5 @@ class ExceptionClientAlreadyReg(
     field: String,
     timestamp: Date = Date()
 
-):GenaralException(statusError,warning,field,timestamp) {
+):GeneralException(statusError,warning,field,timestamp) {
 }

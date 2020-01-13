@@ -12,6 +12,6 @@ interface ServiceAcc {
     fun deposit (accDTO: DepositDTO): Account
     fun withdraw (accDTO: DepositDTO): Account
     fun balance (numberAcc: String): Account
-    fun getByCpfOrNumberAcc (cpf: String,numberAcc: String): Account?
+    fun getByCpfOrNumberAcc (cpf: String,numberAcc: String): Account
 
 }

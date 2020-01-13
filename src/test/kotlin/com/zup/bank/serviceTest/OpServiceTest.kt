@@ -1,5 +1,6 @@
 package com.zup.bank.serviceTest
 
+import com.zup.bank.enum.TypeOperation
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -34,7 +35,7 @@ class OpServiceTest {
     fun `create variables that are used in Operation Service`(){
         client = Client(1,"Pedro","pedro@gmail.com","42511229846")
         acc = Account(1,"0001","18", client,100.00,true)
-        op = Operations(1,"DEPOSIT",50.00,Date(),acc)
+        op = Operations(1,TypeOperation.DEPOSIT,50.00,Date(),acc)
     }
 
 
