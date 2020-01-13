@@ -3,6 +3,8 @@ package com.zup.bank.serviceTest
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
 import com.zup.bank.enum.TypeOperation
+import com.zup.bank.exception.customErrors.AccountAndClientDivergentException
+import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -59,16 +61,16 @@ class AccountServiceTest {
     @Test
     fun `validate account when not exist account and client is register`(){
         Mockito.`when`(accountServ.accRepository.existsByHolderCpf(client.cpf!!)).thenReturn(false)
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(true)
+
 
         accountServ.validateAccount(client.cpf!!)
 
 
         Mockito.verify(accountServ.accRepository,Mockito.times(1)).existsByHolderCpf(client.cpf!!)
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
+
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = ExceptionClientHasAccount::class)
     fun `validate account when  exist account and client has account register and active equals true`(){
         Mockito.`when`(accountServ.accRepository.existsByHolderCpf(client.cpf!!)).thenReturn(true)
         Mockito.`when`(accountServ.accRepository.findByHolderCpf(client.cpf!!)).thenReturn(account)
@@ -87,27 +89,13 @@ class AccountServiceTest {
         Mockito.`when`(accountServ.accRepository.existsByHolderCpf(client.cpf!!)).thenReturn(true)
         Mockito.`when`(accountServ.accRepository.findByHolderCpf(client.cpf!!)).thenReturn(account2)
         Assert.assertThat(false,CoreMatchers.`is`(account2.active))
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(true)
 
         accountServ.validateAccount(client.cpf!!)
 
 
         Mockito.verify(accountServ.accRepository,Mockito.times(1)).existsByHolderCpf(client.cpf!!)
         Mockito.verify(accountServ.accRepository,Mockito.times(1)).findByHolderCpf(client.cpf!!)
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
-    }
 
-
-    @Test(expected = Exception::class)
-    fun `validate account when client is not registrated`(){
-        Mockito.`when`(accountServ.accRepository.existsByHolderCpf(client.cpf!!)).thenReturn(false)
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(false)
-
-        accountServ.validateAccount(client.cpf!!)
-
-
-        Mockito.verify(accountServ.accRepository,Mockito.times(1)).existsByHolderCpf(client.cpf!!)
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
     }
 
 
@@ -147,7 +135,6 @@ class AccountServiceTest {
 
 
         Mockito.`when`(accountServ.accRepository.existsByHolderCpf(client.cpf!!)).thenReturn(false)
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(true)
 
         Mockito.`when`(accountServ.accRepository.existsByHolderCpf(client.cpf!!)).thenReturn(true)
         Mockito.`when`(accountServ.accRepository.findByHolderCpf(client.cpf!!)).thenReturn(account2)
@@ -159,17 +146,16 @@ class AccountServiceTest {
         Assert.assertEquals(1L,account.numAcc)
 
         Mockito.verify(accountServ.accRepository,Mockito.times(2)).existsByHolderCpf(client.cpf!!)
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
         Mockito.verify(accountServ.accRepository,Mockito.times(2)).findByHolderCpf(client.cpf!!)
         Mockito.verify(accountServ.accRepository,Mockito.times(1)).save(account)
     }
 
 
     @Test
-    fun `create a new a account thar client is register`(){
+    fun `create a new a account that client is register`(){
 
         Mockito.`when`(accountServ.accRepository.existsByHolderCpf(client.cpf!!)).thenReturn(false)
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(true)
+
         Mockito.`when`(accountServ.clientRepository.findByCpf(client.cpf!!)).thenReturn(client)
         Mockito.`when`(accountServ.accRepository.save(Mockito.any(Account::class.java))).thenReturn(account)
 
@@ -178,7 +164,6 @@ class AccountServiceTest {
         Assert.assertThat(account.numberAcc,CoreMatchers.notNullValue())
 
         Mockito.verify(accountServ.accRepository,Mockito.times(2)).existsByHolderCpf(client.cpf!!)
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
         Mockito.verify(accountServ.clientRepository,Mockito.times(1)).findByCpf(client.cpf!!)
         Mockito.verify(accountServ.accRepository,Mockito.times(1)).save(account)
     }
@@ -223,49 +208,46 @@ class AccountServiceTest {
 
     }
 
-    @Test(expected = Exception::class)
-    fun `test client not exist`(){
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(false)
-
-//        accountServ.doNotExist(client.cpf!!)
-
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1))
-                .existsByCpf(client.cpf!!)
-    }
 
 
     @Test
     fun `deposit in account`() {
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(true)
-        Mockito.`when`(accountServ.accRepository.existsByNumberAcc(account.numberAcc!!)).thenReturn(true)
+
+
         Mockito.`when`(accountServ.accRepository.findByHolderCpf(account.holder!!.cpf!!)).thenReturn(account)
         Mockito.`when`(accountServ.operationRepository.save(Mockito.any(Operations::class.java))).thenReturn(operations)
         Mockito.`when`(accountServ.accRepository.save(account)).thenReturn(account)
 
         accountServ.deposit(depositDTO)
-        Assert.assertEquals("DEPOSIT",operations.typeOp)
+        Assert.assertEquals(TypeOperation.DEPOSIT,operations.typeOp)
 
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
-        Mockito.verify(accountServ.accRepository,Mockito.times(1)).existsByNumberAcc(account.numberAcc!!)
         Mockito.verify(accountServ.accRepository,Mockito.times(2)).findByHolderCpf(client.cpf!!)
         Mockito.verify(accountServ.operationRepository,Mockito.times(1)).save(Mockito.any(Operations::class.java))
         Mockito.verify(accountServ.accRepository,Mockito.times(1)).save(account)
 
     }
 
+    @Test(expected = AccountAndClientDivergentException::class)
+    fun `account and client divergent in method validate fields`(){
+        val account = Account(1,"0001","22", client,100.00,true)
+        Mockito.`when`(accountServ.accRepository.findByHolderCpf(this.account.holder?.cpf!!)).thenReturn(account)
+
+        accountServ.validateFields(this.account.numberAcc!!,this.account.holder?.cpf!!)
+
+        Mockito.verify(accountServ.accRepository,Mockito.times(1)).findByHolderCpf(account.holder?.cpf!!)
+
+    }
+
     @Test
     fun `withdraw in account`() {
-        Mockito.`when`(accountServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(true)
-        Mockito.`when`(accountServ.accRepository.existsByNumberAcc(account.numberAcc!!)).thenReturn(true)
+
         Mockito.`when`(accountServ.accRepository.findByHolderCpf(account.holder!!.cpf!!)).thenReturn(account)
         Mockito.`when`(accountServ.operationRepository.save(Mockito.any(Operations::class.java))).thenReturn(operations2)
         Mockito.`when`(accountServ.accRepository.save(account)).thenReturn(account)
 
         accountServ.withdraw(depositDTO)
-        Assert.assertEquals("WITHDRAW",operations2.typeOp)
+        Assert.assertEquals(TypeOperation.WITHDRAW,operations2.typeOp)
 
-        Mockito.verify(accountServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
-        Mockito.verify(accountServ.accRepository,Mockito.times(1)).existsByNumberAcc(account.numberAcc!!)
         Mockito.verify(accountServ.accRepository,Mockito.times(2)).findByHolderCpf(client.cpf!!)
         Mockito.verify(accountServ.operationRepository,Mockito.times(1)).save(Mockito.any(Operations::class.java))
         Mockito.verify(accountServ.accRepository,Mockito.times(1)).save(account)
@@ -279,7 +261,15 @@ class AccountServiceTest {
 
         accountServ.balance(account.numberAcc!!)
 
-        Mockito.verify(accountServ.accRepository,Mockito.times(2)).findByNumberAcc(account.numberAcc!!)
+        Mockito.verify(accountServ.accRepository,Mockito.times(1)).findByNumberAcc(account.numberAcc!!)
+    }
+
+    @Test(expected = EmptyResultDataAccessException::class)
+    fun `banlance not found account`(){
+        Mockito.`when`(accountServ.accRepository.findByNumberAcc(account.numberAcc!!))
+            .thenThrow(EmptyResultDataAccessException::class.java)
+
+        accountServ.balance(account.numberAcc!!)
     }
 
 }
