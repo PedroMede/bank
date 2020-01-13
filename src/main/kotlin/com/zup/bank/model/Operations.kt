@@ -13,14 +13,14 @@ class Operations(
      @Column(name = "id")
      var id:Long? = null,
 
-     @Column(name = "typeOperation")
+     @Enumerated(EnumType.STRING)
      var typeOp: TypeOperation? = null,
 
 
      @Column(name="value")
      var value:Double? = 0.0,
  //date
-     @Column(name="date")
+     @Column(name="date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
      var date: Date = Date(),
 
      @ManyToOne
