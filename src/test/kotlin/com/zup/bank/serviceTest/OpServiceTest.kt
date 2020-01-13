@@ -1,6 +1,7 @@
 package com.zup.bank.serviceTest
 
 import com.zup.bank.enum.TypeOperation
+import com.zup.bank.exception.customErrors.AccountNotFoundException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -51,12 +52,14 @@ class OpServiceTest {
     }
 
 
-    @Test(expected = Exception::class)
-    fun notexistAccNum(){
+    @Test(expected = AccountNotFoundException::class)
+    fun `não existe número de conta`(){
         Mockito.`when`(operationServ.operationRepository.existsByAccountNumberAcc("123")).thenReturn(false)
 
         operationServ.validateNumberAcc("123")
 
+        Mockito.verify(operationServ.operationRepository, Mockito.times(1))
+            .existsByAccountNumberAcc("123")
     }
 
     @Test
