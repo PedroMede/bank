@@ -35,7 +35,7 @@ class ClientServImp (
         if(clientRepository.existsByCpf(client.cpf!!)){
             throw ExceptionClientAlreadyReg(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                AllCodeErrors.CODECLIENTREGISTERED, "cpf")
+                AllCodeErrors.CODECLIENTREGISTERED.code, "cpf")
         }
     }
 

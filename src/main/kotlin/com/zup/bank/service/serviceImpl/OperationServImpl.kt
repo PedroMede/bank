@@ -24,7 +24,7 @@ class OperationServImpl(val operationRepository: OperationsRepository) : Service
 
    fun validateNumberAcc(num: String){
         if (!operationRepository.existsByAccountNumberAcc(num)){
-            throw AccountNotFoundException(HttpStatus.NOT_FOUND.value(), AllCodeErrors.CODEACCOUNTNOTFOUND,"")
+            throw AccountNotFoundException(HttpStatus.NOT_FOUND.value(), AllCodeErrors.CODEACCOUNTNOTFOUND.code,"")
         }
     }
 

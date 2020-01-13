@@ -6,7 +6,7 @@ import java.util.*
 class AccountAndClientDivergentException(
 
     statusError : Int,
-    warning: AllCodeErrors,
+    warning: String,
     field: String,
     timestamp: Date = Date()
 

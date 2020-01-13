@@ -89,7 +89,7 @@ class AccountServImpl(
         if(acc.balance!! < accDTO.value!!){
             throw NotSufficientBalanceException(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                AllCodeErrors.CODEBALANCENOTSUFF)
+                AllCodeErrors.CODEBALANCENOTSUFF.code)
         }
 
         acc.balance = acc.balance!! - accDTO.value!!
@@ -118,7 +118,7 @@ class AccountServImpl(
             if (acc.active == true) {
                 throw ExceptionClientHasAccount(
                     HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                    AllCodeErrors.CODEACCOUNTREGISTERED, "cpf")
+                    AllCodeErrors.CODEACCOUNTREGISTERED.code, "cpf")
             }
         }
     }
@@ -142,7 +142,7 @@ class AccountServImpl(
         if (!(acc.numberAcc == numberAcc && acc.holder?.cpf == cpf)){
             throw AccountAndClientDivergentException(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                AllCodeErrors.CODEACCANDCLIENTDIVERENT,"")
+                AllCodeErrors.CODEACCANDCLIENTDIVERENT.code,"")
         }
     }
 }

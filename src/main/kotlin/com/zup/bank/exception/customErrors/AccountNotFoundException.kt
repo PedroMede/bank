@@ -5,7 +5,7 @@ import java.util.*
 
 class AccountNotFoundException(
     statusError : Int,
-    warning: AllCodeErrors,
+    warning: String,
     field: String,
     timestamp: Date = Date()
 

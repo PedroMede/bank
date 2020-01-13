@@ -22,7 +22,7 @@ class RestExceptionHandler(val message: Messages) {
     @ExceptionHandler(ExceptionClientHasAccount::class)
     fun handleClientHasAccount(e: ExceptionClientHasAccount) : ResponseEntity<ResponseClientHasAcc>{
         val responseErrorExcep =
-            ResponseClientHasAcc(e.statusError, e.warnings, e.field, e.timestamp)
+            ResponseClientHasAcc(e.statusError, message.getMessageCode(e.warnings), e.field, e.timestamp)
 
             return ResponseEntity(responseErrorExcep, HttpStatus.UNPROCESSABLE_ENTITY)
     }
@@ -30,7 +30,7 @@ class RestExceptionHandler(val message: Messages) {
     @ExceptionHandler(ExceptionClientAlreadyReg::class)
     fun handleClientAlreadyReg(e: ExceptionClientAlreadyReg) : ResponseEntity<RespClientAlreadyReg>{
         val responseErrorExcep =
-            RespClientAlreadyReg(e.statusError, e.warnings, e.field, e.timestamp)
+            RespClientAlreadyReg(e.statusError, message.getMessageCode(e.warnings), e.field, e.timestamp)
 
         return ResponseEntity(responseErrorExcep, HttpStatus.UNPROCESSABLE_ENTITY)
     }
@@ -39,7 +39,7 @@ class RestExceptionHandler(val message: Messages) {
     fun handleEmptyResultDataAccessException(e: EmptyResultDataAccessException) : ResponseEntity<ResponseEmptyResult>{
         val responseErrorExcep = ResponseEmptyResult(
             HttpStatus.NOT_FOUND.value(),
-            AllCodeErrors.CODEACCOUNTREGISTERED,
+            message.getMessageCode(AllCodeErrors.CODEACCOUNTREGISTERED.code),
             Date())
 
         return ResponseEntity(responseErrorExcep, HttpStatus.NOT_FOUND)
@@ -53,22 +53,29 @@ class RestExceptionHandler(val message: Messages) {
 
     @ExceptionHandler(NotSufficientBalanceException::class)
     fun handleNotSuffucientBalanceException(e:NotSufficientBalanceException): ResponseEntity<ResponseEmptyResult>{
-        val responseError = ResponseEmptyResult(e.statusError,e.warnings,e.timestamp)
+        val responseError = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings),e.timestamp)
 
         return ResponseEntity(responseError,HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
     @ExceptionHandler(AccountAndClientDivergentException::class)
     fun handleAccountAndClientDivergentException(e: AccountAndClientDivergentException): ResponseEntity<ResponseEmptyResult>{
-        val responseErrorExcep = ResponseEmptyResult(e.statusError,e.warnings, e.timestamp)
+        val responseErrorExcep = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings), e.timestamp)
 
         return ResponseEntity(responseErrorExcep,HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
     @ExceptionHandler(AccountNotFoundException::class)
     fun handleAccountNotFoundException(e: AccountNotFoundException): ResponseEntity<ResponseEmptyResult>{
-        val responseErrorExcep = ResponseEmptyResult(e.statusError,e.warnings, e.timestamp)
+        val responseErrorExcep = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings), e.timestamp)
 
         return ResponseEntity(responseErrorExcep,HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(TranferToSameAccException::class)
+    fun handleTranferToSameAccException(e: TranferToSameAccException): ResponseEntity<ResponseEmptyResult>{
+        val responseErrorExcep = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings), e.timestamp)
+
+        return ResponseEntity(responseErrorExcep,HttpStatus.UNPROCESSABLE_ENTITY)
     }
 }

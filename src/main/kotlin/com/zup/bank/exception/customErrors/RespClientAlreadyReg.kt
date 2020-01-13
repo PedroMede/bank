@@ -6,7 +6,7 @@ import java.util.*
 class RespClientAlreadyReg(
 
     var statusError: Int,
-    var warning: AllCodeErrors,
+    var warning: String,
     var field : String,
     var timestamp: Date
 ) {

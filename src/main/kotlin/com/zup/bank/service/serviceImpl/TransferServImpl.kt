@@ -4,6 +4,7 @@ import com.zup.bank.dto.TransferDTO
 import com.zup.bank.enum.TypeOperation
 import com.zup.bank.exception.AllCodeErrors
 import com.zup.bank.exception.customErrors.NotSufficientBalanceException
+import com.zup.bank.exception.customErrors.TranferToSameAccException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Operations
 import com.zup.bank.model.Transfer
@@ -32,7 +33,7 @@ class TransferServImpl (val accRepository: AccountRepository,
 
         if(origin.balance!! < opTransfer.value!!){
             throw NotSufficientBalanceException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                AllCodeErrors.CODEBALANCENOTSUFF)
+                AllCodeErrors.CODEBALANCENOTSUFF.code)
         }
 
         var transfer = Transfer(null,origin,destiny,opTransfer.value)
@@ -56,7 +57,8 @@ class TransferServImpl (val accRepository: AccountRepository,
     fun existOrEqualsAcc(originAcc: String, destinyAcc: String){
 
         if(originAcc == destinyAcc){
-            throw Exception("Tranferencia cancelada, origem e destino iguais")
+            throw TranferToSameAccException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                AllCodeErrors.CODETRANFERSAMEACC.code)
         }
     }
 

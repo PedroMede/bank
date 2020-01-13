@@ -7,7 +7,7 @@ import java.util.*
 open class GeneralException(
 
     val statusError: Int,
-    val warnings: AllCodeErrors,
+    val warnings: String,
     val field:String,
     val timestamp: Date = Date()
 
