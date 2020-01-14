@@ -2,6 +2,8 @@ package com.zup.bank.serviceTest
 
 import com.zup.bank.dto.TransferDTO
 import com.zup.bank.enum.TypeOperation
+import com.zup.bank.exception.customErrors.NotSufficientBalanceException
+import com.zup.bank.exception.customErrors.TranferToSameAccException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -38,81 +40,69 @@ class TransferTest {
     lateinit var clientOrigin: Client
     lateinit var clientDestiny: Client
     lateinit var transferDTO: TransferDTO
-    lateinit var operations: Operations
+    lateinit var operationOrigin: Operations
+    lateinit var operationDestiny: Operations
     lateinit var transfer: Transfer
 
     @Before
     fun create(){
         transferDTO  =  TransferDTO("18","19",20.00 )
         clientOrigin = Client(1,"Pedro","pedro@gmail.com","42511229846")
-        accOrigin = Account(1,"0001","18", clientOrigin,100.00,true)
-        operations = Operations(1,TypeOperation.DEPOSIT,50.00, Date(),accOrigin)
         clientDestiny = Client(2,"Lucia","lucia@gmail.com","88804879653")
-        accDestiny = Account(1,"0001","19", clientOrigin,100.00,true)
-        transfer = Transfer(null,accOrigin,accDestiny,20.00)
+
+        accOrigin = Account(1,"0001","18", clientOrigin,100.00,true)
+        accDestiny = Account(1,"0001","19", clientDestiny,100.00,true)
+        operationOrigin = Operations(1,TypeOperation.TRANFER,50.00, Date(),accOrigin)
+        operationDestiny = Operations(1,TypeOperation.TRANFER,50.00, Date(),accDestiny)
+        transfer = Transfer(1,accOrigin ,accDestiny,20.00)
     }
 
-    @Test(expected = Exception::class)
-    fun notexistOrigin(){
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc("18")).thenReturn(false)
 
-        servTransfer.existOrEqualsAcc("18","23")
+    @Test(expected = TranferToSameAccException::class)
+    fun `Tranfer into same account`(){
+        origin = "18"
+        dest = "18"
 
-    }
-
-    @Test(expected = Exception::class)
-    fun notexistDestiny(){
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc("18")).thenReturn(true)
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc("23")).thenReturn(false)
-
-        servTransfer.existOrEqualsAcc("18","23")
-
-    }
-
-    @Test(expected = Exception::class)
-    fun equals(){
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc("23")).thenReturn(true)
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc("23")).thenReturn(true)
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc("23")).thenReturn(true)
-
-
-        servTransfer.existOrEqualsAcc("23","23")
-
+        servTransfer.existOrEqualsAcc(origin,dest)
     }
 
     @Test
-    fun existOrEqualOk(){
-        origin = "18"
-        dest = "23"
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc(origin)).thenReturn(true)
-        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc(dest)).thenReturn(true)
+    fun `method transfer working sucessfuly`(){
 
+        Mockito.`when`(servTransfer.accRepository.findByNumberAcc("18")).thenReturn(accOrigin)
+        Mockito.`when`(servTransfer.accRepository.findByNumberAcc("19")).thenReturn(accDestiny)
+        Mockito.`when`(servTransfer.accRepository.save(accOrigin)).thenReturn(accOrigin)
+        Mockito.`when`(servTransfer.accRepository.save(accOrigin)).thenReturn(accDestiny)
+        Mockito.`when`(servTransfer.opRepository.save(operationDestiny)).thenReturn(operationDestiny)
+        Mockito.`when`(servTransfer.opRepository.save(operationOrigin)).thenReturn(operationDestiny)
+        Mockito.`when`(servTransfer.transferRepo.save(Mockito.any(Transfer::class.java))).thenReturn(transfer)
 
-        servTransfer.existOrEqualsAcc(origin,dest)
+        servTransfer.transfer(this.transferDTO)
 
+        Mockito.verify(servTransfer.accRepository,Mockito.times(1))
+            .findByNumberAcc("18")
+        Mockito.verify(servTransfer.accRepository,Mockito.times(1))
+            .findByNumberAcc("19")
+        Mockito.verify(servTransfer.accRepository,Mockito.times(1))
+            .save(accOrigin)
+        Mockito.verify(servTransfer.accRepository,Mockito.times(1))
+            .save(accDestiny)
+        Mockito.verify(servTransfer.transferRepo,Mockito.times(1))
+            .save(Mockito.any(Transfer::class.java))
     }
 
-//
-//    @Test(expected = Exception::class)
-//    fun `transfer sucess invalid account`(){
-//        Mockito.`when`(servTransfer.accRepository.existsByNumberAcc(accOrigin.numberAcc!!)).thenReturn(false)
-//        Mockito.`when`(servTransfer.accRepository.findByNumberAcc(accOrigin.numberAcc!!)).thenReturn(accOrigin)
-//        Mockito.`when`(servTransfer.accRepository.save(accOrigin)).thenReturn(accOrigin)
-//        Mockito.`when`(servTransfer.opRepository.save(operations)).thenReturn(operations)
-//        Mockito.`when`(servTransfer.transferRepo.save(transfer)).thenReturn(transfer)
-//
-//        servTransfer.transfer(transferDTO)
-//
-//        Mockito.verify(servTransfer.accRepository,Mockito.times(2))
-//                .existsByNumberAcc(accOrigin.numberAcc!!)
-//        Mockito.verify(servTransfer.accRepository,Mockito.times(2))
-//                .findByNumberAcc(accOrigin.numberAcc!!)
-//        Mockito.verify(servTransfer.accRepository,Mockito.times(1))
-//                .save(accOrigin)
-//        Mockito.verify(servTransfer.opRepository,Mockito.times(2))
-//                .save(operations)
-//        Mockito.verify(servTransfer.transferRepo,Mockito.times(2))
-//                .save(transfer)
-//    }
+    @Test(expected = NotSufficientBalanceException::class)
+    fun `method transfer not working because balance not sufficient`(){
+        val originBalanceNotSuff = Account(1,"0001","18", clientOrigin,10.00,true)
+        val transferBalanceNotSuff = TransferDTO("18","19",20.00 )
+        Mockito.`when`(servTransfer.accRepository.findByNumberAcc("18")).thenReturn(originBalanceNotSuff)
+        Mockito.`when`(servTransfer.accRepository.findByNumberAcc("19")).thenReturn(accDestiny)
 
+        servTransfer.transfer(transferBalanceNotSuff)
+
+        Mockito.verify(servTransfer.accRepository,Mockito.times(1))
+            .findByNumberAcc("18")
+        Mockito.verify(servTransfer.accRepository,Mockito.times(1))
+            .findByNumberAcc("19")
+    }
 }

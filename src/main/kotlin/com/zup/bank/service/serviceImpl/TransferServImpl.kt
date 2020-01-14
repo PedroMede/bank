@@ -36,7 +36,7 @@ class TransferServImpl (val accRepository: AccountRepository,
                 AllCodeErrors.CODEBALANCENOTSUFF.code)
         }
 
-        var transfer = Transfer(null,origin,destiny,opTransfer.value)
+        val transfer = Transfer(null,origin,destiny,opTransfer.value)
 
         origin.balance = origin.balance!! - opTransfer.value!!
         destiny.balance = destiny.balance!! + opTransfer.value!!
@@ -55,7 +55,6 @@ class TransferServImpl (val accRepository: AccountRepository,
     }
 
     fun existOrEqualsAcc(originAcc: String, destinyAcc: String){
-
         if(originAcc == destinyAcc){
             throw TranferToSameAccException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 AllCodeErrors.CODETRANFERSAMEACC.code)

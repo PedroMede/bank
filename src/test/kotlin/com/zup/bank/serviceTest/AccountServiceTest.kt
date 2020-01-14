@@ -5,6 +5,7 @@ import com.zup.bank.dto.DepositDTO
 import com.zup.bank.enum.TypeOperation
 import com.zup.bank.exception.customErrors.AccountAndClientDivergentException
 import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
+import com.zup.bank.exception.customErrors.NotSufficientBalanceException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -24,6 +25,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.test.context.junit4.SpringRunner
+import java.lang.NullPointerException
 
 import java.util.*
 import kotlin.Exception
@@ -194,18 +196,21 @@ class AccountServiceTest {
 
     }
 
-    @Test
-    fun `disable account throw exception`(){
+    @Test(expected = NullPointerException::class)
+    fun `disable account ok`(){
 
-        Mockito.`when`(accountServ.accRepository.findByHolderCpfOrNumberAcc(account.holder!!.cpf!!,account.numberAcc!!))
+        Mockito.`when`(accountServ.accRepository.findByHolderCpfOrNumberAcc("42511229846",account.numberAcc!!))
                 .thenReturn(account)
+        Mockito.`when`(accountServ.accRepository.save(account)).thenReturn(account)
 
-        accountServ.getByCpfOrNumberAcc(account.holder!!.cpf!!,account.numberAcc!!)
+
+        accountServ.disableAcc("42511229846")
 
 
         Mockito.verify(accountServ.accRepository,Mockito.times(1))
                 .findByHolderCpfOrNumberAcc(account.holder!!.cpf!!,account.numberAcc!!)
-
+        Mockito.verify(accountServ.accRepository,Mockito.times(1))
+            .save(account)
     }
 
 
@@ -246,6 +251,22 @@ class AccountServiceTest {
         Mockito.`when`(accountServ.accRepository.save(account)).thenReturn(account)
 
         accountServ.withdraw(depositDTO)
+        Assert.assertEquals(TypeOperation.WITHDRAW,operations2.typeOp)
+
+        Mockito.verify(accountServ.accRepository,Mockito.times(2)).findByHolderCpf(client.cpf!!)
+        Mockito.verify(accountServ.operationRepository,Mockito.times(1)).save(Mockito.any(Operations::class.java))
+        Mockito.verify(accountServ.accRepository,Mockito.times(1)).save(account)
+
+    }
+
+    @Test(expected = NotSufficientBalanceException::class)
+    fun `withdraw in account with not sufficient balance`() {
+        val withdraw = DepositDTO("42511229846","18",200.00)
+        Mockito.`when`(accountServ.accRepository.findByHolderCpf(account.holder!!.cpf!!)).thenReturn(account)
+        Mockito.`when`(accountServ.operationRepository.save(Mockito.any(Operations::class.java))).thenReturn(operations2)
+        Mockito.`when`(accountServ.accRepository.save(account)).thenReturn(account)
+
+        accountServ.withdraw(withdraw)
         Assert.assertEquals(TypeOperation.WITHDRAW,operations2.typeOp)
 
         Mockito.verify(accountServ.accRepository,Mockito.times(2)).findByHolderCpf(client.cpf!!)
