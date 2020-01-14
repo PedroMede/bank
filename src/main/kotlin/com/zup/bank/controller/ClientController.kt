@@ -15,7 +15,7 @@ import javax.validation.Valid
 class ClientController(val clientService: ServiceClient ) {
 
     @PostMapping
-    fun createClient(@Valid @RequestBody  client: Client):ResponseEntity<Client>{
+    fun createClients(@Valid @RequestBody  client: Client):ResponseEntity<Client>{
 
         return ResponseEntity(clientService.createClient(client),HttpStatus.CREATED)
 

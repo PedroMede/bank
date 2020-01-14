@@ -19,10 +19,7 @@ import javax.validation.Valid
 class TransferController(val transferServ: ServiceTransfer) {
 
     @PostMapping
-    fun transfer (@Valid @RequestBody transferDto: TransferDTO, bindResult: BindingResult): ResponseEntity<Transfer>{
-        if (bindResult.hasErrors()){
-            badRequest().body(bindResult.allErrors)
-        }
+    fun transfer (@Valid @RequestBody transferDto: TransferDTO): ResponseEntity<Transfer>{
 
         return ResponseEntity(transferServ.transfer(transferDto),HttpStatus.CREATED)
     }
