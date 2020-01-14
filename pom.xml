@@ -100,8 +100,6 @@
             <artifactId>spring-kafka</artifactId>
             <version>2.4.0.RELEASE</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
