@@ -51,13 +51,11 @@ class AccountController(val accountService: ServiceAcc) {
     @PutMapping("/deposit")
     fun deposit(@Valid @RequestBody depositDTO: DepositDTO ): ResponseEntity<Account>{
 
-
         return ResponseEntity(accountService.deposit(depositDTO),HttpStatus.ACCEPTED)
     }
 
     @PutMapping("/withdraw")
     fun withdraw(@Valid @RequestBody acc: DepositDTO ): ResponseEntity<Account>{
-
 
         return ResponseEntity(accountService.withdraw(acc),HttpStatus.ACCEPTED)
     }

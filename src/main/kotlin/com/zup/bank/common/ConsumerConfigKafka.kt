@@ -28,7 +28,7 @@ class ConsumerConfigKafka {
         props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = "$host:$port"
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
-        props[ConsumerConfig.GROUP_ID_CONFIG] = "helloworld"
+        props[ConsumerConfig.GROUP_ID_CONFIG] = "operation"
 
         return props
     }

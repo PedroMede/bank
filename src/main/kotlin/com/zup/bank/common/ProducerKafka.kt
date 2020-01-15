@@ -1,5 +1,6 @@
 package com.zup.bank.common
 
+import com.zup.bank.model.Transfer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.beans.factory.annotation.Value
@@ -20,7 +21,7 @@ class ProducerKafka {
     private val port : Int = 0
 
     @Bean
-    fun producerFactory(): ProducerFactory<String, String> {
+    fun producerFactory(): ProducerFactory<String, Transfer> {
         val configProps = HashMap<String, Any>()
         configProps[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = "$host:$port"
         configProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
@@ -29,7 +30,7 @@ class ProducerKafka {
     }
 
     @Bean
-    fun kafkaTemplate(): KafkaTemplate<String, String> {
+    fun kafkaTemplate(): KafkaTemplate<String, Transfer> {
         return KafkaTemplate(producerFactory())
     }
 

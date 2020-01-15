@@ -1,5 +1,6 @@
 package com.zup.bank.model
 
+import com.zup.bank.enum.StatusTransfer
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
@@ -20,7 +21,9 @@ class Transfer (
         var destinyAcc: Account? = null,
 
         @Column(name="value")
-        var value:Double? = null
+        var value:Double? = null,
 
+        @Enumerated(EnumType.STRING)
+        var status: StatusTransfer? = null
 ){
 }
