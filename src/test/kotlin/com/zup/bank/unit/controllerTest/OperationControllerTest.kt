@@ -1,4 +1,4 @@
-package com.zup.bank.controllerTest
+package com.zup.bank.unit.controllerTest
 
 
 import com.zup.bank.controller.OperationsController
@@ -11,7 +11,6 @@ import com.zup.bank.service.ServiceOperations
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 
 import org.mockito.Mockito
 import java.util.*

@@ -1,4 +1,4 @@
-package com.zup.bank.common
+package com.zup.bank.common.kafka
 
 
 import org.apache.kafka.clients.producer.ProducerConfig

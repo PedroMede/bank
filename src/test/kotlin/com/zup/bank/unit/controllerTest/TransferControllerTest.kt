@@ -1,16 +1,4 @@
-package com.zup.bank.controllerTest
-
-import com.zup.bank.controller.TransferController
-import com.zup.bank.dto.TransferDTO
-import com.zup.bank.model.Account
-import com.zup.bank.model.Client
-import com.zup.bank.model.Transfer
-import com.zup.bank.service.ServiceTransfer
-import org.junit.Assert
-import org.junit.Test
-import org.mockito.Mockito
-import org.springframework.http.HttpStatus
-import org.springframework.kafka.core.KafkaTemplate
+package com.zup.bank.unit.controllerTest
 
 class TransferControllerTest {
 

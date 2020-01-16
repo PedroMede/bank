@@ -1,5 +1,7 @@
 package com.zup.bank.exception
 
+import com.zup.bank.common.AllCodeErrors
+import com.zup.bank.common.Messages
 import com.zup.bank.exception.customErrors.*
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus

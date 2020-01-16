@@ -1,8 +1,7 @@
-package com.zup.bank.serviceTest
+package com.zup.bank.unit.serviceTest
 
 
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
-import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.serviceImpl.ClientServImp

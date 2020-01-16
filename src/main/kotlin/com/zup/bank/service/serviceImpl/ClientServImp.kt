@@ -1,8 +1,6 @@
 package com.zup.bank.service.serviceImpl
 
-import com.zup.bank.exception.AllCodeErrors
-import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
-import com.zup.bank.exception.Messages
+import com.zup.bank.common.AllCodeErrors
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
 import com.zup.bank.model.Client
 import com.zup.bank.repository.ClientRepository

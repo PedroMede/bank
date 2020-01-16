@@ -26,6 +26,4 @@ class TransferController(val transferServ: ServiceTransfer, val kafkaTemplate : 
         kafkaTemplate.send("transfer", ObjectMapper().writeValueAsString(transferDto))
     }
 
- //   @GetMapping("/kafka/{numAcc}")
-
 }

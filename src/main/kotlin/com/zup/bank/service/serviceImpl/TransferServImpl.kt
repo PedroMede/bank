@@ -3,7 +3,7 @@ package com.zup.bank.service.serviceImpl
 import com.zup.bank.dto.TransferDTO
 import com.zup.bank.enum.StatusTransfer
 import com.zup.bank.enum.TypeOperation
-import com.zup.bank.exception.AllCodeErrors
+import com.zup.bank.common.AllCodeErrors
 import com.zup.bank.exception.customErrors.NotSufficientBalanceException
 import com.zup.bank.exception.customErrors.TranferToSameAccException
 import com.zup.bank.model.Account
@@ -13,11 +13,8 @@ import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.repository.TransferRepository
 import com.zup.bank.service.ServiceTransfer
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Service

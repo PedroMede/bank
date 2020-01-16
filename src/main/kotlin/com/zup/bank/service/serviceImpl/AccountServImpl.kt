@@ -3,8 +3,7 @@ package com.zup.bank.service.serviceImpl
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
 import com.zup.bank.enum.TypeOperation
-import com.zup.bank.exception.AllCodeErrors
-import com.zup.bank.exception.Messages
+import com.zup.bank.common.AllCodeErrors
 import com.zup.bank.exception.customErrors.AccountAndClientDivergentException
 import com.zup.bank.exception.customErrors.ExceptionClientHasAccount
 import com.zup.bank.exception.customErrors.NotSufficientBalanceException

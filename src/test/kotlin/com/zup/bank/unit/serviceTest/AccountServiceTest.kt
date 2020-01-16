@@ -1,4 +1,4 @@
-package com.zup.bank.serviceTest
+package com.zup.bank.unit.serviceTest
 
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
@@ -13,22 +13,16 @@ import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.service.serviceImpl.AccountServImpl
-import com.zup.bank.service.serviceImpl.ClientServImp
 import org.hamcrest.CoreMatchers
-import org.hamcrest.core.IsNull
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.test.context.junit4.SpringRunner
 import java.lang.NullPointerException
 
 import java.util.*
-import kotlin.Exception
 
 class AccountServiceTest {
 

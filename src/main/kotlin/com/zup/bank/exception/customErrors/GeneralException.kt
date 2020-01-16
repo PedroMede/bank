@@ -1,6 +1,5 @@
 package com.zup.bank.exception.customErrors
 
-import com.zup.bank.exception.AllCodeErrors
 import java.lang.RuntimeException
 import java.util.*
 

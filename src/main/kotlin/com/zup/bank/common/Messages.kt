@@ -1,4 +1,4 @@
-package com.zup.bank.exception
+package com.zup.bank.common
 
 import org.springframework.context.MessageSource
 import org.springframework.context.support.MessageSourceAccessor

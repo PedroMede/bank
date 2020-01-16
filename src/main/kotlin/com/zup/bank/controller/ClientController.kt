@@ -23,11 +23,13 @@ class ClientController(val clientService: ServiceClient ) {
 
     @GetMapping
     fun getByCpf(@RequestParam(required = false) cpf: String) : ResponseEntity<Client>{
+
         return ResponseEntity(clientService.getByCpf(cpf),HttpStatus.OK)
     }
 
     @GetMapping("/getAll")
     fun getAll() : ResponseEntity<MutableList<Client>>{
+
         return ResponseEntity(clientService.getAllClient(),HttpStatus.OK)
     }
 }

@@ -1,4 +1,4 @@
-package com.zup.bank.controllerTest
+package com.zup.bank.unit.controllerTest
 
 import com.zup.bank.controller.ClientController
 import com.zup.bank.model.Client

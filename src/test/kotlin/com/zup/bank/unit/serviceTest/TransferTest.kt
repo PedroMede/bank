@@ -1,4 +1,4 @@
-package com.zup.bank.serviceTest
+package com.zup.bank.unit.serviceTest
 
 import com.zup.bank.dto.TransferDTO
 import com.zup.bank.enum.TypeOperation
@@ -9,18 +9,13 @@ import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
 import com.zup.bank.model.Transfer
 import com.zup.bank.repository.AccountRepository
-import com.zup.bank.repository.ClientRepository
 import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.repository.TransferRepository
-import com.zup.bank.service.serviceImpl.AccountServImpl
 import com.zup.bank.service.serviceImpl.TransferServImpl
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
 
 

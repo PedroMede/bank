@@ -1,23 +1,17 @@
-package com.zup.bank.serviceTest
+package com.zup.bank.unit.serviceTest
 
 import com.zup.bank.enum.TypeOperation
 import com.zup.bank.exception.customErrors.AccountNotFoundException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
-import com.zup.bank.repository.ClientRepository
 import com.zup.bank.repository.OperationsRepository
-import com.zup.bank.service.serviceImpl.ClientServImp
 import com.zup.bank.service.serviceImpl.OperationServImpl
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.Mockito
-import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
 
 class OpServiceTest {
