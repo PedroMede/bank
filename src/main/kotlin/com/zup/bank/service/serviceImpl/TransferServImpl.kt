@@ -15,6 +15,7 @@ import com.zup.bank.repository.TransferRepository
 import com.zup.bank.service.ServiceTransfer
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -22,6 +23,7 @@ class TransferServImpl (val accRepository: AccountRepository,
                         val opRepository: OperationsRepository,
                         val transferRepo: TransferRepository ): ServiceTransfer{
 
+    @Transactional
     override fun transfer(opTransfer: TransferDTO): Transfer {
 
         existOrEqualsAcc(opTransfer.originAcc!!,opTransfer.destinyAcc!!)
