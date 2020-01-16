@@ -30,6 +30,10 @@ class TransferServImpl (val accRepository: AccountRepository,
         val destiny: Account = accRepository.findByNumberAcc(opTransfer.destinyAcc!!)
 
         if(origin.balance!! < opTransfer.value!!){
+
+            val transfer = Transfer(null,origin,destiny,opTransfer.value, StatusTransfer.INTERRUPTED)
+            transferRepo.save(transfer)
+
             throw NotSufficientBalanceException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 AllCodeErrors.CODEBALANCENOTSUFF.code)
         }

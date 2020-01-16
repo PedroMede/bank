@@ -39,11 +39,11 @@ class ConsumerConfigKafka {
 
         return factory
     }
-
-    @Bean
-    fun kafkaConsumer(): ConsumerKafka {
-        return ConsumerKafka()
-    }
+//
+//    @Bean
+//    fun kafkaConsumer(): ConsumerKafka {
+//        return ConsumerKafka()
+//    }
 
 
 }
