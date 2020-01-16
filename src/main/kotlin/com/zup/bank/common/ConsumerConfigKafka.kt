@@ -23,23 +23,19 @@ class ConsumerConfigKafka {
     private val port: Int = 0
 
     @Bean
-    fun consumerConfigs(): Map<String, Any> {
+    fun consumerFactory(): ConsumerFactory<String, String> {
         val props = HashMap<String, Any>()
         props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = "$host:$port"
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.GROUP_ID_CONFIG] = "operation"
 
-        return props
+        return DefaultKafkaConsumerFactory(props)
     }
 
-    @Bean
-    fun consumerFactory(): ConsumerFactory<String, String> {
-        return DefaultKafkaConsumerFactory(consumerConfigs())
-    }
 
     @Bean
-    fun kafkaListenerContainerFactory(): KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> {
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = consumerFactory()
 
@@ -51,8 +47,5 @@ class ConsumerConfigKafka {
         return ConsumerKafka()
     }
 
-    companion object {
-        const val TOPIC = "Topic1"
-    }
 
 }

@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS transfer (
   value double DEFAULT NULL,
   destiny_acc_num_acc bigint NOT NULL ,
   origin_acc_num_acc bigint NOT NULL ,
+  status varchar(50) NOT NULL,
   FOREIGN KEY (destiny_acc_num_acc) REFERENCES account(num_acc),
   FOREIGN KEY (origin_acc_num_acc) REFERENCES account(num_acc)
 ) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;

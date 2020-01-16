@@ -1,6 +1,7 @@
 package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.dto.TransferDTO
+import com.zup.bank.enum.StatusTransfer
 import com.zup.bank.enum.TypeOperation
 import com.zup.bank.exception.AllCodeErrors
 import com.zup.bank.exception.customErrors.NotSufficientBalanceException
@@ -36,7 +37,7 @@ class TransferServImpl (val accRepository: AccountRepository,
                 AllCodeErrors.CODEBALANCENOTSUFF.code)
         }
 
-        val transfer = Transfer(null,origin,destiny,opTransfer.value)
+        val transfer = Transfer(null,origin,destiny,opTransfer.value,StatusTransfer.PROCESSING)
 
         origin.balance = origin.balance!! - opTransfer.value!!
         destiny.balance = destiny.balance!! + opTransfer.value!!
