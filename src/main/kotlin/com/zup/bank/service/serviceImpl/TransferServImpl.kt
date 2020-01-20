@@ -13,17 +13,21 @@ import com.zup.bank.repository.AccountRepository
 import com.zup.bank.repository.OperationsRepository
 import com.zup.bank.repository.TransferRepository
 import com.zup.bank.service.ServiceTransfer
+import org.springframework.data.jpa.repository.Lock
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import javax.persistence.LockModeType
 
 @Service
 class TransferServImpl (val accRepository: AccountRepository,
                         val opRepository: OperationsRepository,
-                        val transferRepo: TransferRepository ): ServiceTransfer{
+                        val transferRepo: TransferRepository
+                        ): ServiceTransfer{
 
     @Transactional
+    @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
     override fun transfer(opTransfer: TransferDTO): Transfer {
 
         existOrEqualsAcc(opTransfer.originAcc!!,opTransfer.destinyAcc!!)
@@ -34,13 +38,15 @@ class TransferServImpl (val accRepository: AccountRepository,
         if(origin.balance!! < opTransfer.value!!){
 
             val transfer = Transfer(null,origin,destiny,opTransfer.value, StatusTransfer.INTERRUPTED)
-            transferRepo.save(transfer)
+
 
             throw NotSufficientBalanceException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 AllCodeErrors.CODEBALANCENOTSUFF.code)
         }
 
         val transfer = Transfer(null,origin,destiny,opTransfer.value,StatusTransfer.PROCESSING)
+        transferRepo.save(transfer)
+
 
         origin.balance = origin.balance!! - opTransfer.value!!
         destiny.balance = destiny.balance!! + opTransfer.value!!
@@ -48,14 +54,21 @@ class TransferServImpl (val accRepository: AccountRepository,
         accRepository.save(destiny)
 
         val opOringin = Operations(null,TypeOperation.TRANFER,opTransfer.value!! * (-1),Date(),origin)
-
         opRepository.save(opOringin)
 
         val opDestiny = Operations(null,TypeOperation.TRANFER,opTransfer.value!!, Date(),destiny)
-
         opRepository.save(opDestiny)
 
+
+
+        transfer.status = StatusTransfer.AUTHORIZED
+
         return transferRepo.save(transfer)
+    }
+
+    override fun postInKafka(opTransfer: TransferDTO){
+
+
     }
 
     fun existOrEqualsAcc(originAcc: String, destinyAcc: String){
@@ -64,5 +77,9 @@ class TransferServImpl (val accRepository: AccountRepository,
                 AllCodeErrors.CODETRANFERSAMEACC.code)
         }
     }
+
+
+
+
 
 }

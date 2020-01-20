@@ -1,6 +1,5 @@
 package com.zup.bank.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import com.zup.bank.dto.TransferDTO
 import com.zup.bank.model.Transfer
@@ -23,7 +22,7 @@ class TransferController(val transferServ: ServiceTransfer, val kafkaTemplate : 
     }
 
     @PostMapping("/kafka")
-    fun postKafka(@RequestBody transferDto: TransferDTO){
+    fun postKafka(@Valid @RequestBody transferDto: TransferDTO){
         kafkaTemplate.send("transfer", Gson().toJson(transferDto))
     }
 

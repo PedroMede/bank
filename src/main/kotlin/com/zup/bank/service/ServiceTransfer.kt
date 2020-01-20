@@ -7,4 +7,7 @@ import com.zup.bank.model.Transfer
 interface ServiceTransfer {
 
     fun transfer(opTransfer: TransferDTO): Transfer
+    fun postInKafka(opTransfer: TransferDTO)
+
+
 }

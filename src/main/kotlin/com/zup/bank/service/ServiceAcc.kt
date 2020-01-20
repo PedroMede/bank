@@ -1,7 +1,6 @@
 package com.zup.bank.service
 
 import com.zup.bank.dto.AccountDTO
-import com.zup.bank.dto.BalanceDTO
 import com.zup.bank.dto.DepositDTO
 import com.zup.bank.model.Account
 

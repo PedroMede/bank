@@ -26,7 +26,7 @@ class AccountController(val accountService: ServiceAcc) {
             @RequestParam(required = false,defaultValue = "") cpf:String ,
             @RequestParam(required = false,defaultValue = "") numberAcc: String
     ): Account {
-        return accountService.getByCpfOrNumberAcc(cpf,numberAcc)
+            return accountService.getByCpfOrNumberAcc(cpf,numberAcc)
     }
 
 

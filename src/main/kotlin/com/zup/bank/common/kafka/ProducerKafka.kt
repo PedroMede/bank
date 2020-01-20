@@ -26,6 +26,7 @@ class ProducerKafka {
         configProps[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = "$host:$port"
         configProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+
         return DefaultKafkaProducerFactory(configProps)
     }
 
