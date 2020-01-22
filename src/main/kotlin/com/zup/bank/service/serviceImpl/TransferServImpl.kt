@@ -30,17 +30,15 @@ class TransferServImpl (val accRepository: AccountRepository,
 
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
     override fun transfer(opTransfer: TransferDTO): Transfer {
-
-        lateinit var transfer: Transfer
-
-        try {
+        
+//        try {
 
             existOrEqualsAcc(opTransfer.originAcc!!,opTransfer.destinyAcc!!)
 
-            val origin: Account = accRepository.findByNumberAcc(opTransfer.originAcc!!)
-            val destiny: Account = accRepository.findByNumberAcc(opTransfer.destinyAcc!!)
+           val origin : Account = accRepository.findByNumberAcc(opTransfer.originAcc!!)
+            val destiny : Account = accRepository.findByNumberAcc(opTransfer.destinyAcc!!)
 
-            transfer = Transfer(null,origin,destiny,opTransfer.value,StatusTransfer.PROCESSING)
+            val transfer = Transfer(null,origin,destiny,opTransfer.value,StatusTransfer.PROCESSING)
             transferRepo.save(transfer)
 
             if(origin.balance!! < opTransfer.value!!){
@@ -51,7 +49,6 @@ class TransferServImpl (val accRepository: AccountRepository,
                 throw NotSufficientBalanceException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                     AllCodeErrors.CODEBALANCENOTSUFF.code)
             }
-
 
             origin.balance = origin.balance!! - opTransfer.value!!
             destiny.balance = destiny.balance!! + opTransfer.value!!
@@ -70,12 +67,12 @@ class TransferServImpl (val accRepository: AccountRepository,
 
             return transferRepo.save(transfer)
 
-        }catch (e: EmptyResultDataAccessException) {
+//        }catch (e: EmptyResultDataAccessException) {
+//
+//        }
 
-        }
 
-
-        return transferRepo.save(transfer)
+//        return transferRepo.save(transfer)
 
     }
 
