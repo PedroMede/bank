@@ -6,6 +6,7 @@ import com.zup.bank.exception.customErrors.*
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.util.*
@@ -41,17 +42,21 @@ class RestExceptionHandler(val message: Messages) {
     fun handleEmptyResultDataAccessException(e: EmptyResultDataAccessException) : ResponseEntity<ResponseEmptyResult>{
         val responseErrorExcep = ResponseEmptyResult(
             HttpStatus.NOT_FOUND.value(),
-            message.getMessageCode(AllCodeErrors.CODEACCOUNTREGISTERED.code),
+            message.getMessageCode(AllCodeErrors.CPFNOTFOUND.code),
             Date())
 
         return ResponseEntity(responseErrorExcep, HttpStatus.NOT_FOUND)
     }
 
-//    @ExceptionHandler(MethodArgumentNotValidException::class)
-//    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<*>{
-//
-//        return ResponseEntity(,HttpStatus.BAD_REQUEST)
-//    }
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ResponseEmptyResult>{
+        val responseErrorExcep = ResponseEmptyResult(
+            HttpStatus.BAD_REQUEST.value(),
+            message.getMessageCode(AllCodeErrors.ILLEGALARGUMENT.code),
+            Date())
+
+        return ResponseEntity(responseErrorExcep,HttpStatus.BAD_REQUEST)
+   }
 
     @ExceptionHandler(NotSufficientBalanceException::class)
     fun handleNotSuffucientBalanceException(e:NotSufficientBalanceException): ResponseEntity<ResponseEmptyResult>{
@@ -72,6 +77,16 @@ class RestExceptionHandler(val message: Messages) {
         val responseErrorExcep = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings), e.timestamp)
 
         return ResponseEntity(responseErrorExcep,HttpStatus.NOT_FOUND)
+    }
+
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleIllegalArgumentException(e:IllegalArgumentException): ResponseEntity<ResponseEmptyResult>{
+        val responseErrorExcep = ResponseEmptyResult(
+            HttpStatus.BAD_REQUEST.value(),
+            message.getMessageCode(AllCodeErrors.ILLEGALARGUMENT.code),
+            Date())
+        return ResponseEntity(responseErrorExcep,HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(TranferToSameAccException::class)
