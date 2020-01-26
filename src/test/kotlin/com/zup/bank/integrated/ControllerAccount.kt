@@ -61,7 +61,7 @@ class ControllerAccount {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isCreated)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").isNumber)
             .andExpect(MockMvcResultMatchers.jsonPath("$.agency").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.numberAcc").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.holder").isNotEmpty)
