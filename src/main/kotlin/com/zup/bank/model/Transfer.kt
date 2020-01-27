@@ -24,6 +24,9 @@ class Transfer (
         var value:Double? = null,
 
         @Enumerated(EnumType.STRING)
-        var status: StatusTransfer? = null
+        var status: StatusTransfer = StatusTransfer.PROCESSING
 ){
+        constructor (): this(null){
+
+        }
 }

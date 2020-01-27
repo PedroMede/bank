@@ -6,6 +6,7 @@ import com.zup.bank.exception.customErrors.*
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -49,10 +50,17 @@ class RestExceptionHandler(val message: Messages) {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
-    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ResponseEmptyResult>{
-        val responseErrorExcep = ResponseEmptyResult(
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ResponseMethodNotValid>{
+        val errors : List<String> = emptyList()
+
+        for(error: FieldError in e.bindingResult.fieldErrors){
+            errors.toMutableList().add(error.field + ": " + error.defaultMessage)
+        }
+
+        val responseErrorExcep = ResponseMethodNotValid(
             HttpStatus.BAD_REQUEST.value(),
             message.getMessageCode(AllCodeErrors.ILLEGALARGUMENT.code),
+            errors,
             Date())
 
         return ResponseEntity(responseErrorExcep,HttpStatus.BAD_REQUEST)
@@ -89,10 +97,13 @@ class RestExceptionHandler(val message: Messages) {
         return ResponseEntity(responseErrorExcep,HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(TranferToSameAccException::class)
-    fun handleTranferToSameAccException(e: TranferToSameAccException): ResponseEntity<ResponseEmptyResult>{
-        val responseErrorExcep = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings), e.timestamp)
+    @ExceptionHandler(TransferToSameAccException::class)
+    fun handleTransferToSameAccException(e: TransferToSameAccException): ResponseEntity<ResponseEmptyResult>{
+        val responseErrorExcep = ResponseEmptyResult(e.statusError,
+            message.getMessageCode(e.warnings),e.timestamp)
 
         return ResponseEntity(responseErrorExcep,HttpStatus.UNPROCESSABLE_ENTITY)
     }
 }
+
+

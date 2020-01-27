@@ -3,7 +3,7 @@ package com.zup.bank.unit.serviceTest
 import com.zup.bank.dto.TransferDTO
 import com.zup.bank.enum.TypeOperation
 import com.zup.bank.exception.customErrors.NotSufficientBalanceException
-import com.zup.bank.exception.customErrors.TranferToSameAccException
+import com.zup.bank.exception.customErrors.TransferToSameAccException
 import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import com.zup.bank.model.Operations
@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.springframework.kafka.core.KafkaTemplate
 import java.util.*
 
 
@@ -24,7 +25,8 @@ class TransferTest {
     private val servTransfer = TransferServImpl(
             Mockito.mock(AccountRepository::class.java),
             Mockito.mock(OperationsRepository::class.java),
-            Mockito.mock(TransferRepository::class.java)
+            Mockito.mock(TransferRepository::class.java),
+            Mockito.mock(KafkaTemplate::class.java) as KafkaTemplate<String, String>
     )
 
     @Mock
@@ -53,7 +55,7 @@ class TransferTest {
     }
 
 
-    @Test(expected = TranferToSameAccException::class)
+    @Test(expected = TransferToSameAccException::class)
     fun `Tranfer into same account`(){
         origin = "18"
         dest = "18"
