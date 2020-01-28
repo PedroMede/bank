@@ -5,6 +5,7 @@ import com.zup.bank.dto.TransferDTO
 import com.zup.bank.enum.StatusTransfer
 import com.zup.bank.enum.TypeOperation
 import com.zup.bank.common.AllCodeErrors
+import com.zup.bank.dto.ObjectKafka
 import com.zup.bank.dto.TransferDTOResponse
 import com.zup.bank.exception.customErrors.NotSufficientBalanceException
 import com.zup.bank.exception.customErrors.TransferToSameAccException
@@ -30,7 +31,7 @@ class TransferServImpl(val accRepository: AccountRepository,
 
 
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
-    override fun transfer(opTransfer: TransferDTO) {
+    override fun transfer(opTransfer: ObjectKafka) {
 
         var transfer = Transfer()
 
@@ -39,8 +40,7 @@ class TransferServImpl(val accRepository: AccountRepository,
             val origin = accRepository.findByNumberAcc(opTransfer.originAcc!!)
             val destiny = accRepository.findByNumberAcc(opTransfer.destinyAcc!!)
 
-            transfer = Transfer(null, origin, destiny, opTransfer.value)
-            transferRepo.save(transfer)
+            transfer = transferRepo.findById(opTransfer.id!!).get()
 
             if (origin.balance!! < opTransfer.value!!) {
 
@@ -77,7 +77,12 @@ class TransferServImpl(val accRepository: AccountRepository,
         val origin = accRepository.findByNumberAcc(opTransfer.originAcc!!)
         val destiny = accRepository.findByNumberAcc(opTransfer.destinyAcc!!)
 
-        kafkaTemplate.send("transfer", Gson().toJson(opTransfer))
+        val transfer = Transfer(null, origin, destiny, opTransfer.value)
+        transferRepo.save(transfer)
+
+        val objectKafka = ObjectKafka(opTransfer.originAcc,opTransfer.destinyAcc,opTransfer.value,transfer.id)
+
+        kafkaTemplate.send("transfer", Gson().toJson(objectKafka))
 
         return TransferDTOResponse(opTransfer.originAcc, opTransfer.destinyAcc, opTransfer.value)
     }

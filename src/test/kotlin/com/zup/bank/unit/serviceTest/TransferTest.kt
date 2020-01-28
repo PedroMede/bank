@@ -1,5 +1,6 @@
 package com.zup.bank.unit.serviceTest
 
+import com.zup.bank.dto.ObjectKafka
 import com.zup.bank.dto.TransferDTO
 import com.zup.bank.enum.TypeOperation
 import com.zup.bank.exception.customErrors.NotSufficientBalanceException
@@ -36,14 +37,14 @@ class TransferTest {
     lateinit var accDestiny: Account
     lateinit var clientOrigin: Client
     lateinit var clientDestiny: Client
-    lateinit var transferDTO: TransferDTO
+    lateinit var transferDTO: ObjectKafka
     lateinit var operationOrigin: Operations
     lateinit var operationDestiny: Operations
     lateinit var transfer: Transfer
 
     @Before
     fun create(){
-        transferDTO  =  TransferDTO("18","19",20.00 )
+        transferDTO  =  ObjectKafka("18","19",20.00, 1L )
         clientOrigin = Client(1,"Pedro","pedro@gmail.com","42511229846")
         clientDestiny = Client(2,"Lucia","lucia@gmail.com","88804879653")
 
@@ -64,7 +65,7 @@ class TransferTest {
     }
 
     @Test
-    fun `method transfer working sucessfuly`(){
+    fun `method post in kafka working sucessfuly`(){
 
         Mockito.`when`(servTransfer.accRepository.findByNumberAcc("18")).thenReturn(accOrigin)
         Mockito.`when`(servTransfer.accRepository.findByNumberAcc("19")).thenReturn(accDestiny)
@@ -91,7 +92,7 @@ class TransferTest {
     @Test(expected = NotSufficientBalanceException::class)
     fun `method transfer not working because balance not sufficient`(){
         val originBalanceNotSuff = Account(1,"0001","18", clientOrigin,10.00,true)
-        val transferBalanceNotSuff = TransferDTO("18","19",20.00 )
+        val transferBalanceNotSuff = ObjectKafka("18","19",20.00, 1L)
         Mockito.`when`(servTransfer.accRepository.findByNumberAcc("18")).thenReturn(originBalanceNotSuff)
         Mockito.`when`(servTransfer.accRepository.findByNumberAcc("19")).thenReturn(accDestiny)
 

@@ -1,6 +1,7 @@
 package com.zup.bank.common.kafka
 
 import com.google.gson.Gson
+import com.zup.bank.dto.ObjectKafka
 
 import com.zup.bank.dto.TransferDTO
 
@@ -17,7 +18,7 @@ class ConsumerKafka(private val transferService: ServiceTransfer) {
     @KafkaListener(topics = ["transfer"], groupId = "operation")
     fun receive(data: String) {
 
-        transferService.transfer(Gson().fromJson(data, TransferDTO::class.java))
+        transferService.transfer(Gson().fromJson(data, ObjectKafka::class.java))
 
     }
 
