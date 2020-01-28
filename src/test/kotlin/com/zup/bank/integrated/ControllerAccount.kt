@@ -91,7 +91,7 @@ class ControllerAccount {
             .get("$url/balance/11")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").isNumber)
             .andExpect(MockMvcResultMatchers.jsonPath("$.agency").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.numberAcc").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.holder").isNotEmpty)
@@ -134,11 +134,11 @@ class ControllerAccount {
     @Test
     fun `function to disable account `(){
         mockMvc.perform(MockMvcRequestBuilders
-            .put("$url/disableAcc/42511229846")
+            .put("$url/disableAcc/02160795607")
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").isNumber)
             .andExpect(MockMvcResultMatchers.jsonPath("$.agency").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.numberAcc").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.holder").isNotEmpty)
@@ -179,11 +179,11 @@ class ControllerAccount {
     fun `deposit with valid fields and sucess`(){
         mockMvc.perform(MockMvcRequestBuilders
             .put("$url/deposit")
-            .content(Gson().toJson(DepositDTO("42511229846","11",20.0)))
+            .content(Gson().toJson(DepositDTO("02160795607","11",20.0)))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isAccepted)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").isNumber)
             .andExpect(MockMvcResultMatchers.jsonPath("$.agency").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.numberAcc").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.holder").isNotEmpty)
@@ -210,11 +210,11 @@ class ControllerAccount {
     fun `withdraw with valid fields and sucess`(){
         mockMvc.perform(MockMvcRequestBuilders
             .put("$url/withdraw")
-            .content(Gson().toJson(DepositDTO("88804879653","12",20.0)))
+            .content(Gson().toJson(DepositDTO("41076018033","12",20.0)))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isAccepted)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").value(2))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.numAcc").isNumber)
             .andExpect(MockMvcResultMatchers.jsonPath("$.agency").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.numberAcc").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.holder").isNotEmpty)

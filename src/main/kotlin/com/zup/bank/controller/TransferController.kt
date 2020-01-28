@@ -23,7 +23,7 @@ class TransferController(val transferServ: ServiceTransfer) {
     }
 
     @GetMapping
-    fun getById( @RequestParam(required = false,defaultValue = "") id:Long ) : ResponseEntity<Transfer> {
+    fun getById( @RequestParam(required = false, defaultValue = "") id:Long ) : ResponseEntity<Transfer> {
 
         return ResponseEntity(transferServ.getById(id),HttpStatus.OK)
     }
