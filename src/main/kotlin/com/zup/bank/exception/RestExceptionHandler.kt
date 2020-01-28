@@ -51,11 +51,12 @@ class RestExceptionHandler(val message: Messages) {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ResponseMethodNotValid>{
-        val errors : List<String> = emptyList()
+        val errors : MutableList<String> = mutableListOf()
 
-        for(error: FieldError in e.bindingResult.fieldErrors){
-            errors.toMutableList().add(error.field + ": " + error.defaultMessage)
+        e.bindingResult.fieldErrors.forEach{
+            errors.add("${it.field}: ${it.defaultMessage}")
         }
+
 
         val responseErrorExcep = ResponseMethodNotValid(
             HttpStatus.BAD_REQUEST.value(),

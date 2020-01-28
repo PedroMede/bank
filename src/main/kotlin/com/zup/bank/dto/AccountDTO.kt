@@ -6,8 +6,8 @@ import javax.validation.constraints.NotBlank
 
  class AccountDTO (
 
-        @field:NotBlank(message="cpf obrigatório")
-        @field:CPF(message="Cpf inválido")
+        @field:[NotBlank(message="client.cpf.required")]
+        @field:[CPF(message="client.cpf.not.valid")]
         var cpf : String? = null
 )
 {}

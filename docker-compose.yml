@@ -38,11 +38,9 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-    networks:
-      default:
-        ipam:
-          driver: default
-          config:
-            - subnet: 172.27.0.2/16
-
-    --
+#  networks:
+#    default:
+#      ipam:
+#        driver: default
+#        config:
+#          - subnet: 172.27.0.2/16

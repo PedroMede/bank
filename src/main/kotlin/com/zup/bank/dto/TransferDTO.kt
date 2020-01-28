@@ -5,13 +5,13 @@ import javax.validation.constraints.NotNull
 
 class TransferDTO(
 
-        @field:[NotBlank(message = "Conta de origem obrigatória")]
+        @field:[NotBlank(message = "account.origin")]
         var originAcc:String? = null,
 
-        @field:[NotBlank(message = "Conta de destino obrigatória")]
+        @field:[NotBlank(message = "account.destiny")]
         var destinyAcc:String? = null,
 
-        @field:[NotNull(message = "Valor obrigatório")]
+        @field:[NotNull(message = "account.value")]
         var value:Double? = null
 )
 {
