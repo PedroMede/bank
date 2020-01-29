@@ -19,6 +19,7 @@ import org.springframework.data.jpa.repository.Lock
 import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import javax.persistence.LockModeType
 
@@ -29,7 +30,7 @@ class TransferServImpl(val accRepository: AccountRepository,
                        val kafkaTemplate: KafkaTemplate<String, String>
 ) : ServiceTransfer {
 
-
+    @Transactional
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)
     override fun transfer(opTransfer: ObjectKafka) {
 
@@ -55,6 +56,7 @@ class TransferServImpl(val accRepository: AccountRepository,
             accRepository.save(origin)
             accRepository.save(destiny)
 
+            //add accounts
             val opOringin = Operations(null, TypeOperation.TRANFER, opTransfer.value!! * (-1), Date(), origin)
             opRepository.save(opOringin)
 
@@ -91,7 +93,7 @@ class TransferServImpl(val accRepository: AccountRepository,
         return transferRepo.findById(id).get()
     }
 
-    fun existOrEqualsAcc(originAcc: String, destinyAcc: String) {
+    private fun existOrEqualsAcc(originAcc: String, destinyAcc: String) {
         if (originAcc == destinyAcc) {
             throw TransferToSameAccException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 AllCodeErrors.CODETRANFERSAMEACC.code,AllCodeErrors.CODENUMACC.code)

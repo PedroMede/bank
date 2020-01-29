@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank
 
 @Entity
 @Table(name = "transfer")
-class Transfer (
+data class Transfer (
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
