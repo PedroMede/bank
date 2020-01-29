@@ -77,8 +77,8 @@ class TransferServImpl(val accRepository: AccountRepository,
         val origin = accRepository.findByNumberAcc(opTransfer.originAcc!!)
         val destiny = accRepository.findByNumberAcc(opTransfer.destinyAcc!!)
 
-        val transfer = Transfer(null, origin, destiny, opTransfer.value)
-        transferRepo.save(transfer)
+        var transfer = Transfer(null, origin, destiny, opTransfer.value)
+        transfer = transferRepo.save(transfer)
 
         val objectKafka = ObjectKafka(opTransfer.originAcc,opTransfer.destinyAcc,opTransfer.value,transfer.id)
 
