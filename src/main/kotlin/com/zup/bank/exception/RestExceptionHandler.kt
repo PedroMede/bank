@@ -16,12 +16,6 @@ import java.util.*
 @ControllerAdvice
 class RestExceptionHandler(val message: Messages) {
 
-    @ExceptionHandler(KotlinNullPointerException::class)
-    fun handleNullpointer(e: KotlinNullPointerException ) : ResponseEntity<Any>{
-        println(e)
-
-        return ResponseEntity.badRequest().build()
-    }
 
     @ExceptionHandler(ExceptionClientHasAccount::class)
     fun handleClientHasAccount(e: ExceptionClientHasAccount) : ResponseEntity<ResponseClientHasAcc>{

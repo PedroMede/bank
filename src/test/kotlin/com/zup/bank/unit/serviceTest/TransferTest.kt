@@ -74,17 +74,6 @@ class TransferTest {
     }
 
 
-    @Test(expected = TransferToSameAccException::class)
-    fun `Tranfer into same account`(){
-        origin = "18"
-        dest = "18"
-
-        servTransfer.existOrEqualsAcc(origin,dest)
-    }
-
-
-
-
     @Test(expected = EmptyResultDataAccessException::class)
     fun `function post in kafka that not found account`(){
         Mockito.`when`(servTransfer.accRepository.findByNumberAcc("99")).thenThrow(EmptyResultDataAccessException::class.java)
