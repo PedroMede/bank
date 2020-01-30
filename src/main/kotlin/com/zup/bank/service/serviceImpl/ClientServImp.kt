@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 class ClientServImp (
 
         val  clientRepository: ClientRepository
-//        val  messageException: Messages
+
 ): ServiceClient {
 
     override fun createClient(client : Client) : Client {
