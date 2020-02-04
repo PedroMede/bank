@@ -1,7 +1,0 @@
-camunda.bpm:
-  admin-user:
-    id: bank
-    password: 123
-    firstName: zup-bank
-  filter:
-    create: zup-bank

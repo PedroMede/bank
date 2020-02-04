@@ -12,30 +12,31 @@ import javax.validation.constraints.NotNull
 @Table(name = "client")
 class Client(
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id")
-        var id : Long? = null,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    var id: Long? = null,
 
-        @field: NotBlank(message = "client.name.required")
-        @field: NotNull(message = "client.name.required")
-        @field: NotEmpty(message = "client.name.required")
-        @Column(name = "name")
-        var name: String? = null,
+    @field: NotBlank(message = "client.name.required")
+    @field: NotNull(message = "client.name.required")
+    @field: NotEmpty(message = "client.name.required")
+    @Column(name = "name")
+    var name: String? = null,
 
-        @field:NotBlank(message="client.email.required")
-        @field:NotNull(message="client.email.required")
-        @field:Email(message = "client.email.not.valid")
-        @Column(name = "email")
-        var email:String? = null,
+    @field:NotBlank(message = "client.email.required")
+    @field:NotNull(message = "client.email.required")
+    @field:Email(message = "client.email.not.valid")
+    @Column(name = "email")
+    var email: String? = null,
 
-        @field:NotBlank(message="client.cpf.required")
-        @field:NotEmpty(message="client.cpf.required")
-        @field:NotNull(message="client.cpf.required")
-        @field:CPF(message = "client.cpf.not.valid")
-        @Column(name = "cpf")
-        var cpf: String? = null,
+    @field:NotBlank(message = "client.cpf.required")
+    @field:NotEmpty(message = "client.cpf.required")
+    @field:NotNull(message = "client.cpf.required")
+    @field:CPF(message = "client.cpf.not.valid")
+    @Column(name = "cpf")
+    var cpf: String? = null,
 
-        @Column(name= "status")
-        var status: ClientStatus = ClientStatus.PROCESSING
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    var status: ClientStatus = ClientStatus.PROCESSING
 )
