@@ -97,7 +97,7 @@
         <di:waypoint x="810" y="270" />
         <di:waypoint x="680" y="270" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="845" y="183" width="89" height="14" />
+          <dc:Bounds x="835" y="183" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_13i9rda_di" bpmnElement="EndEvent_1agjbmj">
