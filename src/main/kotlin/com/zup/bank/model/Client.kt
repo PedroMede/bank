@@ -1,5 +1,6 @@
 package com.zup.bank.model
 
+import com.zup.bank.enum.ClientStatus
 import org.hibernate.validator.constraints.br.CPF
 import javax.persistence.*
 import javax.validation.constraints.Email
@@ -33,5 +34,8 @@ class Client(
         @field:NotNull(message="client.cpf.required")
         @field:CPF(message = "client.cpf.not.valid")
         @Column(name = "cpf")
-        var cpf: String? = null
+        var cpf: String? = null,
+
+        @Column(name= "status")
+        var status: ClientStatus = ClientStatus.PROCESSING
 )

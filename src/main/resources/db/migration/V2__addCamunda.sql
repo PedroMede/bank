@@ -1,0 +1,7 @@
+ALTER TABLE client ADD status VARCHAR(50) NOT NULL;
+
+CREATE TABLE IF NOT EXISTS blacklist (
+      id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+      cpf varchar(11) NOT NULL,
+      UNIQUE KEY UK_cpf (cpf)
+) ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
