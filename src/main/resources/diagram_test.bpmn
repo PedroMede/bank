@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1xd4n21" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
-  <bpmn:process id="TestCamunda" isExecutable="true">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1xd4n21" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
+  <bpmn:process id="RegisterClient" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1mnzwvj</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1mnzwvj" sourceRef="StartEvent_1" targetRef="Task_1pmjkfd" />
-    <bpmn:serviceTask id="Task_1pmjkfd" name="Service create Client">
+    <bpmn:serviceTask id="Task_1pmjkfd" name="Service create Client" camunda:delegateExpression="${ChangeStatus}">
       <bpmn:incoming>SequenceFlow_1mnzwvj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01npygt</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -17,7 +17,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_03yl4j4" sourceRef="Task_1h4ef34" targetRef="IntermediateThrowEvent_0dunnhx" />
     <bpmn:sequenceFlow id="SequenceFlow_1u0m6wd" name="If cpf is in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="Task_0fh3h8e" />
     <bpmn:sequenceFlow id="SequenceFlow_1vy8lwm" name="If cpf is not in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="Task_1h4ef34" />
-    <bpmn:serviceTask id="Task_1h4ef34" name="Register Sucess">
+    <bpmn:serviceTask id="Task_1h4ef34" name="Register Sucess" camunda:delegateExpression="${CreatSucess}">
       <bpmn:incoming>SequenceFlow_1vy8lwm</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0z8qc3f</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03yl4j4</bpmn:outgoing>
@@ -50,7 +50,7 @@
     </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="TestCamunda">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="RegisterClient">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="99" width="36" height="36" />
       </bpmndi:BPMNShape>

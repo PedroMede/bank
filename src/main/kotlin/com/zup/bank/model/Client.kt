@@ -17,26 +17,28 @@ class Client(
     @Column(name = "id")
     var id: Long? = null,
 
-    @field: NotBlank(message = "client.name.required")
-    @field: NotNull(message = "client.name.required")
-    @field: NotEmpty(message = "client.name.required")
+    @field: [NotBlank(message = "client.name.required")]
+    @field: [NotNull(message = "client.name.required")]
+    @field: [NotEmpty(message = "client.name.required")]
     @Column(name = "name")
     var name: String? = null,
 
-    @field:NotBlank(message = "client.email.required")
-    @field:NotNull(message = "client.email.required")
-    @field:Email(message = "client.email.not.valid")
+    @field:[NotBlank(message = "client.email.required")]
+    @field:[NotNull(message = "client.email.required")]
+    @field:[Email(message = "client.email.not.valid")]
     @Column(name = "email")
     var email: String? = null,
 
-    @field:NotBlank(message = "client.cpf.required")
-    @field:NotEmpty(message = "client.cpf.required")
-    @field:NotNull(message = "client.cpf.required")
-    @field:CPF(message = "client.cpf.not.valid")
+    @field:[NotBlank(message = "client.cpf.required")]
+    @field:[NotEmpty(message = "client.cpf.required")]
+    @field:[NotNull(message = "client.cpf.required")]
+    @field:[CPF(message = "client.cpf.not.valid")]
     @Column(name = "cpf")
     var cpf: String? = null,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     var status: ClientStatus = ClientStatus.PROCESSING
-)
+){
+    constructor (): this(null){}
+}

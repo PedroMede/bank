@@ -9,7 +9,6 @@ import org.springframework.boot.runApplication
 import org.springframework.context.event.EventListener
 
 @SpringBootApplication
-@EnableProcessApplication
 class BankApplication {
     companion object {
         @JvmStatic
@@ -18,11 +17,4 @@ class BankApplication {
         }
     }
 
-    @Autowired
-    private lateinit var runtimeService: RuntimeService
-
-    @EventListener
-    fun processPostDeploy(event: PostDeployEvent) {
-        runtimeService.startProcessInstanceByKey("TestCamunda")
-    }
 }

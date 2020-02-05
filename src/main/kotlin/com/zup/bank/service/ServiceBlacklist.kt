@@ -1,6 +1,6 @@
 package com.zup.bank.service
 
-import com.zup.bank.dto.BlacklistDTO
+
 import com.zup.bank.model.Blacklist
 
 interface ServiceBlacklist {
