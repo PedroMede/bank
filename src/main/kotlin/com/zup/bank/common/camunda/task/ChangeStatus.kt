@@ -5,6 +5,7 @@ import com.zup.bank.repository.BlacklistRepository
 import com.zup.bank.service.ServiceClient
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.JavaDelegate
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 
@@ -21,9 +22,9 @@ class ChangeStatus (
         client.cpf = execute.variables.get(key="cpf") as String
 
         if (blacklistRepo.existsByCpf(client.cpf!!)){
-
+            execute.setVariable("black",true)
         }else{
-            createTask.execute(execute)
+            execute.setVariable("black",false)
         }
 
     }

@@ -11,7 +11,6 @@ import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
-@EnableProcessApplication
 @Service
 class ClientServImp (
 
@@ -32,6 +31,7 @@ class ClientServImp (
         variables["name"] = client.name!!
         variables["email"] = client.email!!
         variables["cpf"] = client.cpf!!
+        variables["status"] = client.status!!
         runtimeService.startProcessInstanceByKey("RegisterClient", variables)
 
         return client

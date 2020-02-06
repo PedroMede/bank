@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1xd4n21" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1xd4n21" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.6.0">
   <bpmn:process id="RegisterClient" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_1mnzwvj</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1mnzwvj" sourceRef="StartEvent_1" targetRef="Task_1pmjkfd" />
-    <bpmn:serviceTask id="Task_1pmjkfd" name="Service create Client" camunda:delegateExpression="${ChangeStatus}">
+    <bpmn:serviceTask id="Task_1pmjkfd" name="Service create Client" camunda:asyncBefore="true" camunda:delegateExpression="${changeStatus}">
       <bpmn:incoming>SequenceFlow_1mnzwvj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01npygt</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_01npygt" sourceRef="Task_1pmjkfd" targetRef="ExclusiveGateway_0wgo53g" />
-    <bpmn:endEvent id="IntermediateThrowEvent_0dunnhx">
-      <bpmn:incoming>SequenceFlow_03yl4j4</bpmn:incoming>
-      <bpmn:terminateEventDefinition id="TerminateEventDefinition_00lh3dh" />
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="SequenceFlow_03yl4j4" sourceRef="Task_1h4ef34" targetRef="IntermediateThrowEvent_0dunnhx" />
-    <bpmn:sequenceFlow id="SequenceFlow_1u0m6wd" name="If cpf is in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="Task_0fh3h8e" />
-    <bpmn:sequenceFlow id="SequenceFlow_1vy8lwm" name="If cpf is not in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="Task_1h4ef34" />
-    <bpmn:serviceTask id="Task_1h4ef34" name="Register Sucess" camunda:delegateExpression="${CreatSucess}">
+    <bpmn:sequenceFlow id="SequenceFlow_1u0m6wd" name="If cpf is in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="Task_0fh3h8e">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${black}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1vy8lwm" name="If cpf is not in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="Task_1h4ef34">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!black}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Task_1h4ef34" name="Register Sucess" camunda:asyncBefore="true" camunda:delegateExpression="${createSucess}">
       <bpmn:incoming>SequenceFlow_1vy8lwm</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0z8qc3f</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03yl4j4</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0rrbuh2" sourceRef="Task_0fh3h8e" targetRef="ExclusiveGateway_1ak6fj0" />
-    <bpmn:sequenceFlow id="SequenceFlow_0z8qc3f" name="if cpf is authorized" sourceRef="ExclusiveGateway_1ak6fj0" targetRef="Task_1h4ef34" />
-    <bpmn:endEvent id="EndEvent_1agjbmj">
-      <bpmn:incoming>SequenceFlow_1dbn81c</bpmn:incoming>
-      <bpmn:terminateEventDefinition id="TerminateEventDefinition_1tnrwzc" />
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_1cwhxuw" name="if cpf not authorized" sourceRef="ExclusiveGateway_1ak6fj0" targetRef="Task_1le47qb" />
+    <bpmn:sequenceFlow id="SequenceFlow_0z8qc3f" name="if cpf is authorized" sourceRef="ExclusiveGateway_1ak6fj0" targetRef="Task_1h4ef34">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="SequenceFlow_1cwhxuw" name="if cpf not authorized" sourceRef="ExclusiveGateway_1ak6fj0" targetRef="Task_1le47qb">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!status}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0wgo53g">
       <bpmn:incoming>SequenceFlow_01npygt</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1u0m6wd</bpmn:outgoing>
@@ -44,10 +44,16 @@
       <bpmn:outgoing>SequenceFlow_0rrbuh2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1dbn81c" sourceRef="Task_1le47qb" targetRef="EndEvent_1agjbmj" />
-    <bpmn:serviceTask id="Task_1le47qb" name="Registered with error">
+    <bpmn:serviceTask id="Task_1le47qb" name="Registered with error" camunda:asyncBefore="true" camunda:delegateExpression="">
       <bpmn:incoming>SequenceFlow_1cwhxuw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1dbn81c</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_1agjbmj">
+      <bpmn:incoming>SequenceFlow_1dbn81c</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="IntermediateThrowEvent_0dunnhx">
+      <bpmn:incoming>SequenceFlow_03yl4j4</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="RegisterClient">
@@ -65,9 +71,6 @@
         <di:waypoint x="370" y="117" />
         <di:waypoint x="415" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1obwcbe_di" bpmnElement="IntermediateThrowEvent_0dunnhx">
-        <dc:Bounds x="612" y="362" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_03yl4j4_di" bpmnElement="SequenceFlow_03yl4j4">
         <di:waypoint x="630" y="310" />
         <di:waypoint x="630" y="362" />
@@ -102,9 +105,6 @@
           <dc:Bounds x="835" y="183" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_13i9rda_di" bpmnElement="EndEvent_1agjbmj">
-        <dc:Bounds x="1152" y="99" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1cwhxuw_di" bpmnElement="SequenceFlow_1cwhxuw">
         <di:waypoint x="835" y="117" />
         <di:waypoint x="970" y="117" />
@@ -127,6 +127,12 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1l4wd71_di" bpmnElement="Task_1le47qb">
         <dc:Bounds x="970" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0b48nlz_di" bpmnElement="EndEvent_1agjbmj">
+        <dc:Bounds x="1152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0zl6ne2_di" bpmnElement="IntermediateThrowEvent_0dunnhx">
+        <dc:Bounds x="612" y="362" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
