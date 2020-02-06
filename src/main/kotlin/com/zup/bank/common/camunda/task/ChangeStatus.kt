@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service
 @Service
 class ChangeStatus (
     private val blacklistRepo: BlacklistRepository,
-    private val clientService: ServiceClient
+    private val clientService: ServiceClient,
+    private val createTask: CreateSucess
 ): JavaDelegate {
     override fun execute(execute: DelegateExecution) {
         val client = Client()
@@ -22,7 +23,7 @@ class ChangeStatus (
         if (blacklistRepo.existsByCpf(client.cpf!!)){
 
         }else{
-            clientService.createClient(client)
+            createTask.execute(execute)
         }
 
     }

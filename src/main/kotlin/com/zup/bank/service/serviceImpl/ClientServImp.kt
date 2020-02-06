@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service
 @Service
 class ClientServImp (
 
-    private val  clientRepository: ClientRepository,
-    private val runtimeService: RuntimeService
+     val  clientRepository: ClientRepository,
+     val runtimeService: RuntimeService
     ): ServiceClient {
 
     override fun createClient(client : Client)  {
