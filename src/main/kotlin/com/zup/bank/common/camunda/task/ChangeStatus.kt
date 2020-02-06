@@ -5,15 +5,13 @@ import com.zup.bank.repository.BlacklistRepository
 import com.zup.bank.service.ServiceClient
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.JavaDelegate
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 
 @Service
 class ChangeStatus (
-    private val blacklistRepo: BlacklistRepository,
-    private val clientService: ServiceClient,
-    private val createTask: CreateSucess
+    private val blacklistRepo: BlacklistRepository
+
 ): JavaDelegate {
     override fun execute(execute: DelegateExecution) {
         val client = Client()

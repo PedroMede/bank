@@ -17,17 +17,17 @@
     <bpmn:sequenceFlow id="SequenceFlow_1vy8lwm" name="If cpf is not in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="Task_1h4ef34">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!black}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Task_1h4ef34" name="Register Sucess" camunda:asyncBefore="true" camunda:delegateExpression="${createSucess}">
+    <bpmn:serviceTask id="Task_1h4ef34" name="Register Sucess" camunda:asyncBefore="true" camunda:delegateExpression="${createSuccess}">
       <bpmn:incoming>SequenceFlow_1vy8lwm</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0z8qc3f</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03yl4j4</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0rrbuh2" sourceRef="Task_0fh3h8e" targetRef="ExclusiveGateway_1ak6fj0" />
     <bpmn:sequenceFlow id="SequenceFlow_0z8qc3f" name="if cpf is authorized" sourceRef="ExclusiveGateway_1ak6fj0" targetRef="Task_1h4ef34">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${status}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1cwhxuw" name="if cpf not authorized" sourceRef="ExclusiveGateway_1ak6fj0" targetRef="Task_1le47qb">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!status}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!approved}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="ExclusiveGateway_0wgo53g">
       <bpmn:incoming>SequenceFlow_01npygt</bpmn:incoming>
@@ -39,12 +39,17 @@
       <bpmn:outgoing>SequenceFlow_0z8qc3f</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1cwhxuw</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_0fh3h8e" name="Callback">
+    <bpmn:userTask id="Task_0fh3h8e" name="Callback" camunda:asyncBefore="true" camunda:assignee="bank">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="approved" label="Approve?" type="boolean" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1u0m6wd</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0rrbuh2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="SequenceFlow_1dbn81c" sourceRef="Task_1le47qb" targetRef="EndEvent_1agjbmj" />
-    <bpmn:serviceTask id="Task_1le47qb" name="Registered with error" camunda:asyncBefore="true" camunda:delegateExpression="">
+    <bpmn:serviceTask id="Task_1le47qb" name="Registered with error" camunda:asyncBefore="true" camunda:delegateExpression="${registerError}">
       <bpmn:incoming>SequenceFlow_1cwhxuw</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1dbn81c</bpmn:outgoing>
     </bpmn:serviceTask>

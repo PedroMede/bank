@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
+import javax.xml.ws.Response
 
 
 @RestController
@@ -20,6 +21,15 @@ class BlacklistController(private val blackService: ServiceBlacklist) {
     @GetMapping
     fun getAll():ResponseEntity<MutableList<Blacklist>>{
         return ResponseEntity(blackService.getAll(),HttpStatus.OK)
+    }
+
+    @DeleteMapping
+    fun delete(@RequestParam(required = false) cpf: String) {
+        if (cpf==""){
+            blackService.deleteAll()
+        } else {
+            blackService.deleteByCpf(cpf)
+        }
     }
 
 }

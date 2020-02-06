@@ -37,6 +37,10 @@ class ClientServImp (
         return client
     }
 
+    override fun deleteBycpf(cpf: String) {
+        clientRepository.deleteByCpf(cpf)
+    }
+
     override fun getAllClient(): MutableList<Client> {
        return clientRepository.findAll()
     }

@@ -23,6 +23,14 @@ class BlackListServImpl(
         return serviceBlack.findAll()
     }
 
+    override fun deleteByCpf(cpf: String) {
+        serviceBlack.deleteByCpf(cpf)
+    }
+
+    override fun deleteAll() {
+        serviceBlack.deleteAll()
+    }
+
     fun verifyClient(cpf:String){
         if(serviceBlack.existsByCpf(cpf)){
             throw ExceptionClientAlreadyReg(

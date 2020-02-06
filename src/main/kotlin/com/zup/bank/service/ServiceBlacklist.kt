@@ -7,5 +7,7 @@ interface ServiceBlacklist {
 
     fun createBlack(blacklist: Blacklist) : Blacklist
     fun getAll(): MutableList<Blacklist>
+    fun deleteByCpf(cpf: String)
+    fun deleteAll()
 
 }

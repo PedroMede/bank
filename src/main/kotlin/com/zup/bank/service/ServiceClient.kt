@@ -10,4 +10,5 @@ interface ServiceClient {
     fun getAllClient() : MutableList<Client>
     fun getByCpf(cpf:String): Client
     fun startCamunda(client: Client) : Client
+    fun deleteBycpf(cpf:String)
 }
