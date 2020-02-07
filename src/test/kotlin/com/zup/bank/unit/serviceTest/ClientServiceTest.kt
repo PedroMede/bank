@@ -3,6 +3,7 @@ package com.zup.bank.unit.serviceTest
 
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
 import com.zup.bank.model.Client
+import com.zup.bank.repository.BlacklistBlocked
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.serviceImpl.ClientServImp
 import org.camunda.bpm.engine.RuntimeService
@@ -22,6 +23,7 @@ class ClientServiceTest {
     private val clientServ: ClientServImp = ClientServImp(
 
             Mockito.mock(ClientRepository::class.java),
+            Mockito.mock(BlacklistBlocked::class.java),
             Mockito.mock(RuntimeService::class.java)
 
     )
@@ -92,14 +94,7 @@ class ClientServiceTest {
         Mockito.verify(clientServ.clientRepository,Mockito.times(1)).findByCpf(client.cpf!!)
     }
 
-    @Test(expected = ExceptionClientAlreadyReg::class)
-    fun `exist client by cpf`(){
-        Mockito.`when`(clientServ.clientRepository.existsByCpf(client.cpf!!)).thenReturn(true)
 
-        clientServ.validateClient(client)
-
-        Mockito.verify(clientServ.clientRepository, Mockito.times(1)).existsByCpf(client.cpf!!)
-    }
 
     @Test(expected = MethodArgumentNotValidException::class)
     fun `client with field name is  null`(){

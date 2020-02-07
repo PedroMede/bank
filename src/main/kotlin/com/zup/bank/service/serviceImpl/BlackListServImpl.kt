@@ -35,7 +35,7 @@ class BlackListServImpl(
         if(serviceBlack.existsByCpf(cpf)){
             throw ExceptionClientAlreadyReg(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                AllCodeErrors.CODECLIENTREGISTERED.code, "cpf"
+                AllCodeErrors.CODEBLACKLISTCLIENT.code, "cpf"
             )
         }
     }

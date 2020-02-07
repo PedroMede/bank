@@ -2,30 +2,45 @@ package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.common.AllCodeErrors
 import com.zup.bank.enum.ClientStatus
+import com.zup.bank.exception.customErrors.ClientInProcessException
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
+import com.zup.bank.model.BlockedClient
 import com.zup.bank.model.Client
+import com.zup.bank.repository.BlacklistBlocked
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.ServiceClient
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
-class ClientServImp (
+class ClientServImp(
 
-     val  clientRepository: ClientRepository,
-     val runtimeService: RuntimeService
-    ): ServiceClient {
+    val clientRepository: ClientRepository,
+    val blackBlockedRepo: BlacklistBlocked,
+    val runtimeService: RuntimeService
+) : ServiceClient {
 
-    override fun createClient(client : Client)  {
+    override fun createClient(client: Client) {
         client.status = ClientStatus.CREATED
         clientRepository.save(client)
     }
 
-    override fun startCamunda(client: Client) : Client {
+    override fun startCamunda(client: Client): Client {
         validateClient(client)
-        clientRepository.save(client)
+        validateStatus(client)
+
+        if (blackBlockedRepo.existsByCpf(client.cpf!!)){
+            val clientB = blackBlockedRepo.findByCpf(client.cpf!!)
+            clientB.status = ClientStatus.PROCESSING
+            blackBlockedRepo.save(clientB)
+        }else{
+            val clientProcessing = BlockedClient(null, client.cpf, client.status)
+            blackBlockedRepo.save(clientProcessing)
+        }
+
 
         val variables = mutableMapOf<String, Any>()
         variables["name"] = client.name!!
@@ -42,18 +57,34 @@ class ClientServImp (
     }
 
     override fun getAllClient(): MutableList<Client> {
-       return clientRepository.findAll()
+        return clientRepository.findAll()
     }
 
     override fun getByCpf(cpf: String): Client {
         return clientRepository.findByCpf(cpf)
     }
 
-    fun validateClient(client: Client) {
-        if(clientRepository.existsByCpf(client.cpf!!)){
+    private fun validateClient(client: Client) {
+        if (clientRepository.existsByCpf(client.cpf!!)) {
             throw ExceptionClientAlreadyReg(
                 HttpStatus.UNPROCESSABLE_ENTITY.value(),
                 AllCodeErrors.CODECLIENTREGISTERED.code, "cpf")
+        }
+    }
+
+    private fun validateStatus(client: Client) {
+
+        try {
+            val clientB: BlockedClient = blackBlockedRepo.findByCpfAndStatus(client.cpf!!, client.status)
+            if (clientB.status == ClientStatus.PROCESSING) {
+                throw ClientInProcessException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                    AllCodeErrors.CODECLIENTPROCESS.code)
+            }
+        } catch (e: ClientInProcessException) {
+            throw ClientInProcessException(
+                e.statusError, e.warnings, e.timestamp)
+        } catch (e: EmptyResultDataAccessException) {
+
         }
     }
 

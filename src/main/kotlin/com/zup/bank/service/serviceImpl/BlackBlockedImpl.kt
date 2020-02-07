@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 @Service
 class BlackBlockedImpl(val service: BlacklistBlocked): ServiceBlackBlocked {
     override fun createBlocked(blocked: BlockedClient) {
-        blocked.status = ClientStatus.BLOCKED
         service.save(blocked)
     }
 
@@ -17,7 +16,11 @@ class BlackBlockedImpl(val service: BlacklistBlocked): ServiceBlackBlocked {
        return service.findAll()
     }
 
-    override fun getByCpf(cpf: String): BlockedClient {
-        return service.findByCpf(cpf)
+    override fun getByCpf(cpf: String,status: ClientStatus): BlockedClient {
+        return service.findByCpfAndStatus(cpf,status)
+    }
+
+    override fun deleteByCpf(cpf: String) {
+        service.deleteByCpf(cpf)
     }
 }

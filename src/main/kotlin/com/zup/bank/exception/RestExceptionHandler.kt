@@ -68,6 +68,14 @@ class RestExceptionHandler(val message: Messages) {
         return ResponseEntity(responseError,HttpStatus.UNPROCESSABLE_ENTITY)
     }
 
+    @ExceptionHandler(ClientInProcessException::class)
+    fun handleClientInProcessException(e:ClientInProcessException): ResponseEntity<ResponseEmptyResult>{
+        val responseError = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings),e.timestamp)
+
+        return ResponseEntity(responseError,HttpStatus.UNPROCESSABLE_ENTITY)
+    }
+
+
     @ExceptionHandler(AccountAndClientDivergentException::class)
     fun handleAccountAndClientDivergentException(e: AccountAndClientDivergentException): ResponseEntity<ResponseEmptyResult>{
         val responseErrorExcep = ResponseEmptyResult(e.statusError,message.getMessageCode(e.warnings), e.timestamp)

@@ -17,7 +17,8 @@ class AllCodeErrors(val code: String) {
         //Client
         val CODECLIENTNOTREG: AllCodeErrors = AllCodeErrors("client.not.register")
         val CODECLIENTREGISTERED: AllCodeErrors = AllCodeErrors("client.registered")
-
+        val CODEBLACKLISTCLIENT : AllCodeErrors = AllCodeErrors("client.black")
+        val CODECLIENTPROCESS: AllCodeErrors = AllCodeErrors("client.process")
         //common
         val CPFNOTFOUND: AllCodeErrors = AllCodeErrors("cpf.not.found")
         val ILLEGALARGUMENT: AllCodeErrors = AllCodeErrors("illegal.argument")
