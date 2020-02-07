@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class ChangeStatus (
-    private val blacklistRepo: BlacklistRepository
+     val blacklistRepo: BlacklistRepository
 
 ): JavaDelegate {
     override fun execute(execute: DelegateExecution) {

@@ -11,7 +11,7 @@ import javax.xml.ws.Response
 
 @RestController
 @RequestMapping("/blacklist")
-class BlacklistController(private val blackService: ServiceBlacklist) {
+class BlacklistController( val blackService: ServiceBlacklist) {
 
     @PostMapping
     fun createBlockClient(@Valid @RequestBody blacklist: Blacklist): ResponseEntity<Blacklist>{
