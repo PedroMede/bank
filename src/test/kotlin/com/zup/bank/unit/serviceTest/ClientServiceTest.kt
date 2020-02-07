@@ -3,12 +3,10 @@ package com.zup.bank.unit.serviceTest
 
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
 import com.zup.bank.model.Client
-import com.zup.bank.repository.BlacklistBlocked
+import com.zup.bank.repository.BlacklistBlockedRepository
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.serviceImpl.ClientServImp
 import org.camunda.bpm.engine.RuntimeService
-import org.hamcrest.CoreMatchers
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -23,7 +21,7 @@ class ClientServiceTest {
     private val clientServ: ClientServImp = ClientServImp(
 
             Mockito.mock(ClientRepository::class.java),
-            Mockito.mock(BlacklistBlocked::class.java),
+            Mockito.mock(BlacklistBlockedRepository::class.java),
             Mockito.mock(RuntimeService::class.java)
 
     )

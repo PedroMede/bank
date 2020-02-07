@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class BlackListServImpl(
-    private val serviceBlack: BlacklistRepository
+     val serviceBlack: BlacklistRepository
 ): ServiceBlacklist {
 
     override fun createBlack(blacklist: Blacklist): Blacklist {

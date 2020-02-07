@@ -6,11 +6,10 @@ import com.zup.bank.exception.customErrors.ClientInProcessException
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
 import com.zup.bank.model.BlockedClient
 import com.zup.bank.model.Client
-import com.zup.bank.repository.BlacklistBlocked
+import com.zup.bank.repository.BlacklistBlockedRepository
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.ServiceClient
 import org.camunda.bpm.engine.RuntimeService
-import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Service
 class ClientServImp(
 
     val clientRepository: ClientRepository,
-    val blackBlockedRepo: BlacklistBlocked,
+    val blackBlockedRepositoryRepo: BlacklistBlockedRepository,
     val runtimeService: RuntimeService
 ) : ServiceClient {
 
@@ -32,13 +31,13 @@ class ClientServImp(
         validateClient(client)
         validateStatus(client)
 
-        if (blackBlockedRepo.existsByCpf(client.cpf!!)){
-            val clientB = blackBlockedRepo.findByCpf(client.cpf!!)
+        if (blackBlockedRepositoryRepo.existsByCpf(client.cpf!!)){
+            val clientB = blackBlockedRepositoryRepo.findByCpf(client.cpf!!)
             clientB.status = ClientStatus.PROCESSING
-            blackBlockedRepo.save(clientB)
+            blackBlockedRepositoryRepo.save(clientB)
         }else{
             val clientProcessing = BlockedClient(null, client.cpf, client.status)
-            blackBlockedRepo.save(clientProcessing)
+            blackBlockedRepositoryRepo.save(clientProcessing)
         }
 
 
@@ -75,7 +74,7 @@ class ClientServImp(
     private fun validateStatus(client: Client) {
 
         try {
-            val clientB: BlockedClient = blackBlockedRepo.findByCpfAndStatus(client.cpf!!, client.status)
+            val clientB: BlockedClient = blackBlockedRepositoryRepo.findByCpfAndStatus(client.cpf!!, client.status)
             if (clientB.status == ClientStatus.PROCESSING) {
                 throw ClientInProcessException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                     AllCodeErrors.CODECLIENTPROCESS.code)
