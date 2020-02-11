@@ -1,0 +1,1 @@
+INSERT INTO blacklistblocked (id,cpf,status) VALUES (1,"42511229846","PROCESSING");
