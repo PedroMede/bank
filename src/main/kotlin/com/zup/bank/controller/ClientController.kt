@@ -17,7 +17,7 @@ class ClientController(val clientService: ServiceClient ) {
     @PostMapping
     fun createClients(@Valid @RequestBody client: Client):ResponseEntity<Client>{
 
-        return ResponseEntity(clientService.startCamunda(client),HttpStatus.ACCEPTED)
+        return ResponseEntity(clientService.startCamunda(client),HttpStatus.OK)
     }
 
     @GetMapping

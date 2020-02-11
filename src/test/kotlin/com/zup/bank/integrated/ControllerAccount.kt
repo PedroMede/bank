@@ -1,34 +1,21 @@
 package com.zup.bank.integrated
 
 import com.google.gson.Gson
+import com.zup.bank.ConfigAbstract
 import com.zup.bank.dto.AccountDTO
 import com.zup.bank.dto.DepositDTO
-import com.zup.bank.model.Account
 import com.zup.bank.model.Client
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.context.junit4.SpringRunner
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
 
-@RunWith(SpringRunner::class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class ControllerAccount {
+@Transactional
+class ControllerAccount: ConfigAbstract() {
 
-
-    @Autowired
-    private lateinit var mockMvc: MockMvc
     private val url: String = "http://localhost:8090/account"
     private lateinit var client: Client
 
@@ -51,7 +38,6 @@ class ControllerAccount {
 
     }
 
-    @Transactional
     @Sql("/scripts/client.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     fun `function create account sucess`(){
@@ -83,7 +69,6 @@ class ControllerAccount {
 
     }
 
-    @Transactional
     @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     fun `function get balance `(){
@@ -115,7 +100,6 @@ class ControllerAccount {
     }
 
 
-    @Transactional
     @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     fun `return a list with all account`(){
@@ -129,7 +113,6 @@ class ControllerAccount {
     }
 
 
-    @Transactional
     @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     fun `function to disable account `(){
@@ -173,7 +156,6 @@ class ControllerAccount {
             .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty)
     }
 
-    @Transactional
     @Test
     @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     fun `deposit with valid fields and sucess`(){
@@ -204,7 +186,6 @@ class ControllerAccount {
             .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty)
     }
 
-    @Transactional
     @Test
     @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     fun `withdraw with valid fields and sucess`(){

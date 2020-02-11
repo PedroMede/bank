@@ -1,30 +1,17 @@
 package com.zup.bank.integrated
 
 import com.google.gson.Gson
+import com.zup.bank.ConfigAbstract
 import com.zup.bank.model.Client
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.context.junit4.SpringRunner
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
 
-
-@RunWith(SpringRunner::class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class ControllerClient {
-
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+@Transactional
+class ControllerClient: ConfigAbstract() {
     private val url: String = "http://localhost:8090/client"
 
     @Test
@@ -54,7 +41,6 @@ class ControllerClient {
 
     }
 
-    @Transactional
     @Sql("/scripts/client.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     fun `return a list with all clients`(){
@@ -68,7 +54,6 @@ class ControllerClient {
     }
 
 
-    @Transactional
     @Test
     fun `creat a client into table client`(){
         mockMvc.perform(MockMvcRequestBuilders
@@ -76,8 +61,8 @@ class ControllerClient {
             .content(Gson().toJson(Client(null,"Pedro","pedro@gmail.com","42511229846")))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isCreated)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNumber)
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").isEmpty)
             .andExpect(MockMvcResultMatchers.jsonPath("$.name").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.email").isString)
             .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").isString)

@@ -1,7 +1,9 @@
 package com.zup.bank.integrated
 
+import com.zup.bank.ConfigAbstract
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,18 +17,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
 
 
-@RunWith(SpringRunner::class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class ControllerOperation {
+@Transactional
+class ControllerOperation: ConfigAbstract() {
 
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+
     private val url: String = "http://localhost:8090/bankStatement"
 
 
-    @Transactional
     @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     fun `return a list of all operations `(){
@@ -40,7 +37,6 @@ class ControllerOperation {
     }
 
 
-    @Transactional
     @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Test
     fun `get bank statement `(){
