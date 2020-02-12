@@ -1,7 +1,6 @@
 package com.zup.bank.service.serviceImpl
 
 import com.zup.bank.common.AllCodeErrors
-import com.zup.bank.dto.BlacklistDTO
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
 import com.zup.bank.model.Blacklist
 import com.zup.bank.repository.BlacklistRepository

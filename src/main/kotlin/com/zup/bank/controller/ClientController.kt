@@ -16,19 +16,16 @@ class ClientController(val clientService: ServiceClient ) {
 
     @PostMapping
     fun createClients(@Valid @RequestBody client: Client):ResponseEntity<Client>{
-
         return ResponseEntity(clientService.startCamunda(client),HttpStatus.OK)
     }
 
     @GetMapping
     fun getByCpf(@RequestParam(required = false) cpf: String) : ResponseEntity<Client>{
-
         return ResponseEntity(clientService.getByCpf(cpf),HttpStatus.OK)
     }
 
     @GetMapping("/getAll")
     fun getAll() : ResponseEntity<MutableList<Client>>{
-
         return ResponseEntity(clientService.getAllClient(),HttpStatus.OK)
     }
 }

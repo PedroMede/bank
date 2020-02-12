@@ -18,13 +18,11 @@ class TransferController(val transferServ: ServiceTransfer) {
 
     @PostMapping
     fun postKafka (@Valid @RequestBody transferDto: TransferDTO): ResponseEntity<TransferDTOResponse>{
-
         return ResponseEntity(transferServ.postInKafka(transferDto),HttpStatus.ACCEPTED)
     }
 
     @GetMapping
     fun getById( @RequestParam(required = false, defaultValue = "") id:Long ) : ResponseEntity<Transfer> {
-
         return ResponseEntity(transferServ.getById(id),HttpStatus.OK)
     }
 

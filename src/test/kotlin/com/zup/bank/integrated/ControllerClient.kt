@@ -68,6 +68,21 @@ class ControllerClient: ConfigAbstract() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.cpf").isString)
     }
 
+    @Sql("/scripts/client.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    fun `client already registerd`(){
+        mockMvc.perform(MockMvcRequestBuilders
+            .get(url)
+            .content(Gson().toJson(Client(null,"Pedro","pedro@gmail.com","42511229846")))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().is4xxClientError)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.statusError").isNumber)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.warning").isString)
+//            .andExpect(MockMvcResultMatchers.jsonPath("$.field").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty)
+
+    }
 
 
 
