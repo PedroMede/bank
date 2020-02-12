@@ -1,12 +1,17 @@
 package com.zup.bank.unit.serviceTest
 
 
+import com.zup.bank.enum.ClientStatus
+import com.zup.bank.exception.customErrors.ClientInProcessException
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
+import com.zup.bank.model.BlockedClient
 import com.zup.bank.model.Client
 import com.zup.bank.repository.BlacklistBlockedRepository
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.serviceImpl.ClientServImp
 import org.camunda.bpm.engine.RuntimeService
+import org.hamcrest.CoreMatchers
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -28,7 +33,7 @@ class ClientServiceTest {
 
     @Mock
     lateinit var client: Client
-
+    lateinit var clientB: BlockedClient
 
     @Before
     fun createClient(){
@@ -36,31 +41,66 @@ class ClientServiceTest {
 
     }
 
-    //class exception
-//    @Test(expected = ExceptionClientAlreadyReg::class)
-//    fun `test if exist client registered`(){
-//        Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(true)
-//
-//        clientServ.createClient(client)
-//
-//        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
-//    }
 
-//    @Test
-//    fun `not exist client and create a new one`(){
-//        Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
-//        Mockito.`when`(clientServ.clientRepository.save(client)).thenReturn(client)
-//
-////        val response : Client = clientServ.createClient(client)
-//////
-////        Assert.assertEquals(response, client)
-////        Assert.assertThat(response, CoreMatchers.notNullValue())
-////        Assert.assertThat(response.id, CoreMatchers.`is`(1L))
-//
-//
-//        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).save(Mockito.any())
-//        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).existsByCpf(client.cpf!!)
-//    }
+    @Test(expected = ExceptionClientAlreadyReg::class)
+    fun `client already exist in bank`(){
+        Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(true)
+
+        clientServ.startCamunda(client)
+
+        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).existsByCpf("42511229846")
+    }
+
+    @Test(expected = ClientInProcessException::class)
+    fun `client still in process on Camunda`(){
+
+        clientB = BlockedClient(1,"42511229846",ClientStatus.PROCESSING)
+        Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.findByCpfAndStatus("42511229846",client.status)).thenReturn(clientB)
+
+        clientServ.startCamunda(client)
+
+        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).existsByCpf("42511229846")
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).findByCpfAndStatus("42511229846",client.status)
+    }
+
+    @Test
+    fun` star camunda successfully`(){
+        clientB = BlockedClient(1,"42511229846")
+        Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.findByCpfAndStatus("42511229846",client.status)).thenReturn(clientB)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.existsByCpf("42511229846")).thenReturn(true)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.findByCpf("42511229846")).thenReturn(clientB)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.save(clientB)).thenReturn(clientB)
+
+        clientServ.startCamunda(client)
+        Assert.assertThat(clientB.status,CoreMatchers.`is`(ClientStatus.PROCESSING))
+
+        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).existsByCpf("42511229846")
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).findByCpfAndStatus("42511229846",client.status)
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).existsByCpf("42511229846")
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).findByCpf("42511229846")
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).save(clientB)
+
+    }
+
+    @Test
+    fun `client that not exist in waitlist`(){
+        clientB = BlockedClient(1,"42511229846")
+        Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.findByCpfAndStatus("42511229846",client.status)).thenReturn(clientB)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.existsByCpf("42511229846")).thenReturn(false)
+        Mockito.`when`(clientServ.blackBlockedRepositoryRepo.save(clientB)).thenReturn(clientB)
+
+        clientServ.startCamunda(client)
+        Assert.assertThat(clientB.status,CoreMatchers.`is`(ClientStatus.BLOCKED))
+
+        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).existsByCpf("42511229846")
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).findByCpfAndStatus("42511229846",client.status)
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).existsByCpf("42511229846")
+        Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1))
+            .save(Mockito.any(BlockedClient::class.java))
+    }
 
     @Test
     fun getAllClientOk(){
@@ -116,5 +156,13 @@ class ClientServiceTest {
 
     }
 
+    @Test
+    fun `delete by cpf`(){
+        Mockito.doNothing().`when`(clientServ.clientRepository).deleteByCpf("42511229846")
+
+        clientServ.deleteBycpf("42511229846")
+
+        Mockito.verify(clientServ.clientRepository,Mockito.times(1)).deleteByCpf("42511229846")
+    }
 
 }
