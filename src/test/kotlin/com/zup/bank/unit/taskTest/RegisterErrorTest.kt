@@ -4,7 +4,6 @@ import com.zup.bank.common.camunda.task.RegisterError
 import com.zup.bank.enum.ClientStatus
 import com.zup.bank.model.BlockedClient
 import com.zup.bank.model.Client
-import com.zup.bank.repository.BlacklistBlockedRepository
 import com.zup.bank.service.ServiceBlackBlocked
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.hamcrest.CoreMatchers
@@ -13,7 +12,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.springframework.beans.factory.annotation.Autowired
 
 class RegisterErrorTest {
 
