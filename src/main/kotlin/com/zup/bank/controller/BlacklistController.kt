@@ -25,11 +25,7 @@ class BlacklistController( val blackService: ServiceBlacklist) {
 
     @DeleteMapping
     fun delete(@RequestParam(required = false) cpf: String) {
-        if (cpf==""){
-            blackService.deleteAll()
-        } else {
-            blackService.deleteByCpf(cpf)
-        }
+        blackService.deleteByCpf(cpf)
     }
 
 }

@@ -42,5 +42,15 @@ class BlackListControllerTest {
         Mockito.verify(blackController.blackService,Mockito.times(1)).getAll()
     }
 
+    @Test
+    fun `delete by cpf`(){
+        Mockito.doNothing().`when`(blackController.blackService).deleteByCpf(clientB.cpf!!)
+
+        blackController.delete(clientB.cpf!!)
+
+        Mockito.verify(blackController.blackService,Mockito.times(1)).deleteByCpf(clientB.cpf!!)
+    }
+
+
 
 }
