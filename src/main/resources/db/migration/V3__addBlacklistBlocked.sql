@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS blacklistblocked (
+CREATE TABLE IF NOT EXISTS waitlist (
          id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY ,
          cpf varchar(11) NOT NULL,
          status varchar(50) NOT NULL

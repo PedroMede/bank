@@ -4,9 +4,9 @@ import com.zup.bank.common.AllCodeErrors
 import com.zup.bank.enum.ClientStatus
 import com.zup.bank.exception.customErrors.ClientInProcessException
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
-import com.zup.bank.model.BlockedClient
+import com.zup.bank.model.Waitlist
 import com.zup.bank.model.Client
-import com.zup.bank.repository.BlacklistBlockedRepository
+import com.zup.bank.repository.WaitListRepository
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.ServiceClient
 import org.camunda.bpm.engine.RuntimeService
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service
 class ClientServImp(
 
     val clientRepository: ClientRepository,
-    val blackBlockedRepositoryRepo: BlacklistBlockedRepository,
+    val blackBlockedRepositoryRepo: WaitListRepository,
     val runtimeService: RuntimeService
 ) : ServiceClient {
 
@@ -36,7 +36,7 @@ class ClientServImp(
             clientB.status = ClientStatus.PROCESSING
             blackBlockedRepositoryRepo.save(clientB)
         }else{
-            val clientProcessing = BlockedClient(null, client.cpf, client.status)
+            val clientProcessing = Waitlist(null, client.cpf, client.status)
             blackBlockedRepositoryRepo.save(clientProcessing)
         }
 
@@ -74,7 +74,7 @@ class ClientServImp(
     private fun validateStatus(client: Client) {
 
         try {
-            val clientB: BlockedClient = blackBlockedRepositoryRepo.findByCpfAndStatus(client.cpf!!, client.status)
+            val clientB: Waitlist = blackBlockedRepositoryRepo.findByCpfAndStatus(client.cpf!!, client.status)
             if (clientB.status == ClientStatus.PROCESSING) {
                 throw ClientInProcessException(HttpStatus.UNPROCESSABLE_ENTITY.value(),
                     AllCodeErrors.CODECLIENTPROCESS.code)

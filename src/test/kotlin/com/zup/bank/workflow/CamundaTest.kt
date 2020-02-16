@@ -5,7 +5,7 @@ import com.zup.bank.ConfigAbstract
 import com.zup.bank.enum.ClientStatus
 import com.zup.bank.model.Client
 import com.zup.bank.repository.BlacklistRepository
-import com.zup.bank.service.ServiceBlackBlocked
+import com.zup.bank.service.ServiceWaitlist
 import com.zup.bank.service.ServiceClient
 import org.camunda.bpm.engine.delegate.JavaDelegate
 import org.camunda.bpm.engine.test.Deployment
@@ -34,7 +34,7 @@ class CamundaTest : ConfigAbstract() {
     lateinit var serviceClient: ServiceClient
 
     @Autowired
-    lateinit var servBlackBlocked: ServiceBlackBlocked
+    lateinit var servWaitlist: ServiceWaitlist
 
     @Mock
     lateinit var process: ProcessScenario
@@ -79,7 +79,6 @@ class CamundaTest : ConfigAbstract() {
         )
 
         Scenario.run(process).startByKey("RegisterClient", variables).execute()
-
         Mockito.verify(process, Mockito.times(1)).hasFinished("EndEvent_Success")
 
     }

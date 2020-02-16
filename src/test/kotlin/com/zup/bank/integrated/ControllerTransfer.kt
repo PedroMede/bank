@@ -44,6 +44,19 @@ class ControllerTransfer: ConfigAbstract() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status").isNotEmpty)
     }
 
+    @Test
+    @Sql("/scripts/account.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    fun `transfer to same account exception`(){
+        mockMvc.perform(MockMvcRequestBuilders
+            .post(url)
+            .content(Gson().toJson(TransferDTO("11","11",500.00)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.statusError").value(422))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.warning").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty)
+    }
 
 
 }

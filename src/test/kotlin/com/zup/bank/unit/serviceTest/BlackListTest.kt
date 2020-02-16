@@ -3,7 +3,6 @@ package com.zup.bank.unit.serviceTest
 
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
 import com.zup.bank.model.Blacklist
-import com.zup.bank.model.BlockedClient
 import com.zup.bank.repository.BlacklistRepository
 import com.zup.bank.service.serviceImpl.BlackListServImpl
 import org.junit.Before

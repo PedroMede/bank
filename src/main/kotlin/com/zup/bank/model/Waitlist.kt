@@ -4,8 +4,8 @@ import com.zup.bank.enum.ClientStatus
 import javax.persistence.*
 
 @Entity
-@Table(name="blacklistblocked")
-class BlockedClient(
+@Table(name="waitlist")
+class Waitlist(
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     @Column(name="id")

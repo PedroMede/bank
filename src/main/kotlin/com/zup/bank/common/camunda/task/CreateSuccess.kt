@@ -2,7 +2,7 @@ package com.zup.bank.common.camunda.task
 
 import com.zup.bank.enum.ClientStatus
 import com.zup.bank.model.Client
-import com.zup.bank.service.ServiceBlackBlocked
+import com.zup.bank.service.ServiceWaitlist
 import com.zup.bank.service.ServiceClient
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.JavaDelegate
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CreateSuccess ( val serviceClient: ServiceClient,
-                      val servBlackBlocked: ServiceBlackBlocked) : JavaDelegate {
+                      val servWaitlist: ServiceWaitlist) : JavaDelegate {
     @Transactional
     override fun execute(execution: DelegateExecution) {
         val client = Client(
@@ -21,8 +21,8 @@ class CreateSuccess ( val serviceClient: ServiceClient,
             execution.variables.get(key="cpf") as String
             )
         serviceClient.createClient(client)
-        val clientBlackBlock = servBlackBlocked.getByCpf(client.cpf!!,ClientStatus.PROCESSING)
+        val clientBlackBlock = servWaitlist.getByCpf(client.cpf!!,ClientStatus.PROCESSING)
         clientBlackBlock.status= ClientStatus.CREATED
-        servBlackBlocked.createBlocked(clientBlackBlock)
+        servWaitlist.createBlocked(clientBlackBlock)
     }
 }

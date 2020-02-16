@@ -51,6 +51,4 @@ class BlackListControllerTest {
         Mockito.verify(blackController.blackService,Mockito.times(1)).deleteByCpf(clientB.cpf!!)
     }
 
-
-
 }

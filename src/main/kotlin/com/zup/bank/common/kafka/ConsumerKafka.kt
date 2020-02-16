@@ -17,14 +17,6 @@ class ConsumerKafka(private val transferService: ServiceTransfer) {
 
     @KafkaListener(topics = ["transfer"], groupId = "operation")
     fun receive(data: String) {
-
         transferService.transfer(Gson().fromJson(data, ObjectKafka::class.java))
-
     }
-
-    companion object {
-
-        private val LOGGER = LoggerFactory.getLogger(ConsumerKafka::class.java)
-    }
-
 }

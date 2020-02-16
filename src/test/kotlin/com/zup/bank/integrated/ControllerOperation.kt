@@ -49,5 +49,17 @@ class ControllerOperation: ConfigAbstract() {
 
     }
 
+    @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    fun `get bank statement that account not found `(){
+        mockMvc.perform(MockMvcRequestBuilders
+            .get("$url/13")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isNotFound)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.statusError").value(404))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.warning").isString)
+
+    }
 
 }

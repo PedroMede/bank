@@ -5,7 +5,7 @@
       <bpmn:outgoing>SequenceFlow_1mnzwvj</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1mnzwvj" sourceRef="StartEvent_1" targetRef="SERVICE_CREATE_CLIENT" />
-    <bpmn:serviceTask id="SERVICE_CREATE_CLIENT" name="Service create Client" camunda:asyncBefore="true" camunda:delegateExpression="${changeStatus}">
+    <bpmn:serviceTask id="SERVICE_CREATE_CLIENT" name="Update Status" camunda:asyncBefore="true" camunda:delegateExpression="${changeStatus}">
       <bpmn:incoming>SequenceFlow_1mnzwvj</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_01npygt</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -17,7 +17,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_1vy8lwm" name="If cpf is not in blacklist" sourceRef="ExclusiveGateway_0wgo53g" targetRef="REGISTER_SUCCESS">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${!black}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="REGISTER_SUCCESS" name="Register Success" camunda:asyncBefore="true" camunda:delegateExpression="${createSuccess}">
+    <bpmn:serviceTask id="REGISTER_SUCCESS" name="Registered Success" camunda:asyncBefore="true" camunda:delegateExpression="${createSuccess}">
       <bpmn:incoming>SequenceFlow_1vy8lwm</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0z8qc3f</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03yl4j4</bpmn:outgoing>

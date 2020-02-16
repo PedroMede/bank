@@ -4,9 +4,9 @@ package com.zup.bank.unit.serviceTest
 import com.zup.bank.enum.ClientStatus
 import com.zup.bank.exception.customErrors.ClientInProcessException
 import com.zup.bank.exception.customErrors.ExceptionClientAlreadyReg
-import com.zup.bank.model.BlockedClient
+import com.zup.bank.model.Waitlist
 import com.zup.bank.model.Client
-import com.zup.bank.repository.BlacklistBlockedRepository
+import com.zup.bank.repository.WaitListRepository
 import com.zup.bank.repository.ClientRepository
 import com.zup.bank.service.serviceImpl.ClientServImp
 import org.camunda.bpm.engine.RuntimeService
@@ -26,14 +26,14 @@ class ClientServiceTest {
     private val clientServ: ClientServImp = ClientServImp(
 
             Mockito.mock(ClientRepository::class.java),
-            Mockito.mock(BlacklistBlockedRepository::class.java),
+            Mockito.mock(WaitListRepository::class.java),
             Mockito.mock(RuntimeService::class.java)
 
     )
 
     @Mock
     lateinit var client: Client
-    lateinit var clientB: BlockedClient
+    lateinit var clientB: Waitlist
 
     @Before
     fun createClient(){
@@ -54,7 +54,7 @@ class ClientServiceTest {
     @Test(expected = ClientInProcessException::class)
     fun `client still in process on Camunda`(){
 
-        clientB = BlockedClient(1,"42511229846",ClientStatus.PROCESSING)
+        clientB = Waitlist(1,"42511229846",ClientStatus.PROCESSING)
         Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
         Mockito.`when`(clientServ.blackBlockedRepositoryRepo.findByCpfAndStatus("42511229846",client.status)).thenReturn(clientB)
 
@@ -66,7 +66,7 @@ class ClientServiceTest {
 
     @Test
     fun` star camunda successfully`(){
-        clientB = BlockedClient(1,"42511229846")
+        clientB = Waitlist(1,"42511229846")
         Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
         Mockito.`when`(clientServ.blackBlockedRepositoryRepo.findByCpfAndStatus("42511229846",client.status)).thenReturn(clientB)
         Mockito.`when`(clientServ.blackBlockedRepositoryRepo.existsByCpf("42511229846")).thenReturn(true)
@@ -86,7 +86,7 @@ class ClientServiceTest {
 
     @Test
     fun `client that not exist in waitlist`(){
-        clientB = BlockedClient(1,"42511229846")
+        clientB = Waitlist(1,"42511229846")
         Mockito.`when`(clientServ.clientRepository.existsByCpf("42511229846")).thenReturn(false)
         Mockito.`when`(clientServ.blackBlockedRepositoryRepo.findByCpfAndStatus("42511229846",client.status)).thenReturn(clientB)
         Mockito.`when`(clientServ.blackBlockedRepositoryRepo.existsByCpf("42511229846")).thenReturn(false)
@@ -99,7 +99,7 @@ class ClientServiceTest {
         Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).findByCpfAndStatus("42511229846",client.status)
         Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1)).existsByCpf("42511229846")
         Mockito.verify(clientServ.blackBlockedRepositoryRepo,Mockito.times(1))
-            .save(Mockito.any(BlockedClient::class.java))
+            .save(Mockito.any(Waitlist::class.java))
     }
 
     @Test

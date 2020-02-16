@@ -203,5 +203,47 @@ class ControllerAccount: ConfigAbstract() {
             .andExpect(MockMvcResultMatchers.jsonPath("$.active").isBoolean)
     }
 
+    @Test
+    @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    fun `function create account with exception that client have account`(){
+        mockMvc.perform(MockMvcRequestBuilders
+            .post(url)
+            .content(Gson().toJson(AccountDTO("02160795607")))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.statusError").value(422))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.warning").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.field").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty)
+    }
+
+    @Test
+    @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    fun `withdraw that balance is not sufficient`(){
+        mockMvc.perform(MockMvcRequestBuilders
+            .put("$url/withdraw")
+            .content(Gson().toJson(DepositDTO("02160795607","11",100.0)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.statusError").value(422))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.warning").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty)
+    }
+
+    @Test
+    @Sql("/scripts/account.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    fun `withdraw that account and client are divergent`(){
+        mockMvc.perform(MockMvcRequestBuilders
+            .put("$url/withdraw")
+            .content(Gson().toJson(DepositDTO("02160795607","13",100.0)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.statusError").value(422))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.warning").isString)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").isNotEmpty)
+    }
 
 }
